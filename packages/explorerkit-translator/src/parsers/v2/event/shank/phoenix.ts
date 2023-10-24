@@ -1,4 +1,4 @@
-import { IdlDefinedType,IdlTypeDefinedLink } from "@solanafm/kinobi-lite";
+import { IdlDefinedType, IdlTypeDefinedLink } from "@solanafm/kinobi-lite";
 import { capitalizeFirstLetter, convertBNToNumberInObject } from "@solanafm/utils";
 
 import { mapDataTypeToName } from "../../../../helpers/idl";

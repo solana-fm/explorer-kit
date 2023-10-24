@@ -1,4 +1,4 @@
-import { BorshEventCoder,Idl as AnchorIdl } from "@coral-xyz/anchor";
+import { BorshEventCoder, Idl as AnchorIdl } from "@coral-xyz/anchor";
 import { convertBNToNumberInObject } from "@solanafm/utils";
 
 import { mapDataTypeToName } from "../../../helpers/idl";

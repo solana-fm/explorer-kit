@@ -1,5 +1,5 @@
 import { base58 } from "@metaplex-foundation/umi";
-import { Idl as ShankIdl,IdlInstruction } from "@solanafm/kinobi-lite";
+import { Idl as ShankIdl, IdlInstruction } from "@solanafm/kinobi-lite";
 import { convertBNToNumberInObject } from "@solanafm/utils";
 
 import { mapAccountKeysToName, mapDataTypeToName } from "../../../helpers/idl";
