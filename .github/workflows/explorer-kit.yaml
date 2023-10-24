@@ -1,0 +1,39 @@
+name: ExplorerKit Test
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "packages/explorerkit-translator/**"
+      - "packages/explorerkit-idls/**"
+
+jobs:
+  run-test-cases:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup pnpm package manager
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7.18.2
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+      - name: Install Node Modules
+        run: pnpm install
+      - name: Run ExplorerKit Idls Repo Tests
+        run: pnpm test
+        working-directory: ./packages/explorerkit-idls
+      - name: Build @solanafm/ek-idls-repo
+        run: pnpm build
+        working-directory: ./packages/explorerkit-idls
+      - name: Run Explorer Kit Tests
+        run: pnpm test
+        working-directory: ./packages/explorerkit-translator
+      - name: Build @solanafm/ek-idls-repo
+        run: pnpm build
+        working-directory: ./packages/explorerkit-idls
