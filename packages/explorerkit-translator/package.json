@@ -1,0 +1,32 @@
+{
+  "name": "@solanafm/explorer-kit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --minify",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "clean": "rimraf .turbo && rimraf node_modules && rimraf dist",
+    "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
+    "publish-package": "npm publish --access=public"
+  },
+  "keywords": [],
+  "author": "SolanaFM",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@solana/web3.js": "^1.87.2",
+    "@solanafm/explorer-kit-idls": "workspace:*",
+    "eslint-config-explorerkit": "workspace:*",
+    "tsconfig": "workspace:*",
+    "vitest": "^0.34.2"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.28.1-beta.2",
+    "@metaplex-foundation/umi": "^0.8.6",
+    "@metaplex-foundation/umi-serializers": "^0.8.5",
+    "@solanafm/kinobi-lite": "^0.12.0",
+    "@solanafm/utils": "^0.3.0"
+  }
+}

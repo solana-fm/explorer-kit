@@ -9,7 +9,9 @@
   "devDependencies": {
     "eslint": "^8.48.0",
     "prettier": "^3.0.3",
+    "rimraf": "^5.0.5",
     "tsconfig": "workspace:*",
+    "tsup": "^7.2.0",
     "turbo": "latest"
   },
   "packageManager": "pnpm@8.6.10",

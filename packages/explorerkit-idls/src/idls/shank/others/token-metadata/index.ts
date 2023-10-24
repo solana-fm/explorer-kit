@@ -1,0 +1,11 @@
+export { TokenMetadataV125IDL } from "./token-metadata-v125";
+export { TokenMetadataV130IDL } from "./token-metadata-v130";
+export { TokenMetadataV135IDL } from "./token-metadata-v135";
+export { TokenMetadataV160IDL } from "./token-metadata-v160";
+export { TokenMetadataV162IDL } from "./token-metadata-v162";
+export { TokenMetadataV170IDL } from "./token-metadata-v170";
+export { TokenMetadataV170Beta2IDL } from "./token-metadata-v170beta2";
+export { TokenMetadataV1100IDL } from "./token-metadata-v1100";
+export { TokenMetadataV1110IDL } from "./token-metadata-v1110";
+export { TokenMetadataV1120IDL } from "./token-metadata-v1120";
+export { TokenMetadataV1130IDL } from "./token-metadata-v1130";
