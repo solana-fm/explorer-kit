@@ -1,4 +1,4 @@
-import { AccountParserInterface, InstructionParserInterface, EventParserInterface } from "..";
+import { AccountParserInterface, EventParserInterface,InstructionParserInterface } from "..";
 import { ErrorParserInterface } from "../interfaces/ErrorParserInterface";
 
 export enum ParserType {

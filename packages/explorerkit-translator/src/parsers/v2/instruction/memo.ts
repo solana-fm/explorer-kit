@@ -1,13 +1,13 @@
-import { convertBNToNumberInObject } from "@solanafm/utils";
 import { base58 } from "@metaplex-foundation/umi";
+import { IdlType } from "@solanafm/kinobi-lite";
+import { convertBNToNumberInObject } from "@solanafm/utils";
 
+import { DataWithMappedType } from "../../../helpers/idl";
 import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
-import { IdlItem } from "../../../types/IdlItem";
 import { InstructionParserInterface } from "../../../interfaces";
+import { IdlItem } from "../../../types/IdlItem";
 import { KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
-import { DataWithMappedType } from "../../../helpers/idl";
-import { IdlType } from "@solanafm/kinobi-lite";
 
 export const createShankIxMemo: (idlItem: IdlItem) => InstructionParserInterface = (idlItem: IdlItem) => {
   const idl = idlItem.idl as string;

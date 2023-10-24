@@ -1,9 +1,10 @@
 import { BorshAccountsCoder, Idl as AnchorIdl } from "@coral-xyz/anchor";
-import { AccountParserInterface } from "../../../interfaces";
-import { ParserOutput, ParserType } from "../../../types/Parsers";
 import { convertBNToNumberInObject } from "@solanafm/utils";
+
 import { mapDataTypeToName } from "../../../helpers/idl";
+import { AccountParserInterface } from "../../../interfaces";
 import { IdlItem } from "../../../types/IdlItem";
+import { ParserOutput, ParserType } from "../../../types/Parsers";
 
 export const createAnchorAccountParser: (idlItem: IdlItem) => AccountParserInterface = (idlItem: IdlItem) => {
   const idl = idlItem.idl as AnchorIdl;

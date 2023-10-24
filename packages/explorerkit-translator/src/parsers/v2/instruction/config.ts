@@ -1,11 +1,11 @@
-import { IdlInstruction, Idl as ShankIdl } from "@solanafm/kinobi-lite";
-import { convertBNToNumberInObject } from "@solanafm/utils";
 import { base58 } from "@metaplex-foundation/umi";
+import { Idl as ShankIdl,IdlInstruction } from "@solanafm/kinobi-lite";
+import { convertBNToNumberInObject } from "@solanafm/utils";
 
-import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { mapAccountKeysToName, mapDataTypeToName } from "../../../helpers/idl";
-import { IdlItem } from "../../../types/IdlItem";
+import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { InstructionParserInterface } from "../../../interfaces";
+import { IdlItem } from "../../../types/IdlItem";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
 
 export const createShankIxConfig: (idlItem: IdlItem) => InstructionParserInterface = (idlItem: IdlItem) => {

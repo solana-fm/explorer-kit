@@ -1,7 +1,8 @@
 import { Idl as ShankIdl } from "@solanafm/kinobi-lite";
+
 import { ErrorParserInterface } from "../../../interfaces";
-import { ParserType } from "../../../types/Parsers";
 import { IdlItem } from "../../../types/IdlItem";
+import { ParserType } from "../../../types/Parsers";
 
 export const createShankErrorParser: (idlItem: IdlItem) => ErrorParserInterface = (idlItem: IdlItem) => {
   const idl = idlItem.idl as ShankIdl;

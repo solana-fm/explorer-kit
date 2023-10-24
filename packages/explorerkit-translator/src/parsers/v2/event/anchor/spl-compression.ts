@@ -1,11 +1,12 @@
 import { convertBNToNumberInObject } from "@solanafm/utils";
-import { EventParserInterface } from "../../../../interfaces";
-import { ParserOutput, ParserType } from "../../../../types/Parsers";
+
 import { mapDataTypeToName } from "../../../../helpers/idl";
-import { IdlItem } from "../../../../types/IdlItem";
 import { KinobiTreeGenerator } from "../../../../helpers/KinobiTreeGenerator";
-import { KinobiTreeGeneratorType } from "../../../../types/KinobiTreeGenerator";
 import { CompressionEventIdl } from "../../../../idls/spl-compression";
+import { EventParserInterface } from "../../../../interfaces";
+import { IdlItem } from "../../../../types/IdlItem";
+import { KinobiTreeGeneratorType } from "../../../../types/KinobiTreeGenerator";
+import { ParserOutput, ParserType } from "../../../../types/Parsers";
 
 // This is because bubblegum programs are wrapping application_data to a spl-compression no-op program
 export const createSPLCompEventParser: (_: IdlItem) => EventParserInterface = (_: IdlItem) => {

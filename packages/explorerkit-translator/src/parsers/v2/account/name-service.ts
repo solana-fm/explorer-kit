@@ -1,12 +1,12 @@
 import { Idl as ShankIdl } from "@solanafm/kinobi-lite";
 import { convertBNToNumberInObject } from "@solanafm/utils";
 
-import { FMShankSerializer, KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
+import { mapDataTypeToName } from "../../../helpers/idl";
 import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { AccountParserInterface } from "../../../interfaces";
-import { ParserOutput, ParserType } from "../../../types/Parsers";
-import { mapDataTypeToName } from "../../../helpers/idl";
 import { IdlItem } from "../../../types/IdlItem";
+import { FMShankSerializer, KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
+import { ParserOutput, ParserType } from "../../../types/Parsers";
 
 export const createShankNameServiceAccount: (idlItem: IdlItem) => AccountParserInterface = (idlItem: IdlItem) => {
   const idl = idlItem.idl as ShankIdl;
@@ -18,7 +18,6 @@ export const createShankNameServiceAccount: (idlItem: IdlItem) => AccountParserI
     try {
       const dataBuffer: Buffer = Buffer.from(accountData, "base64");
       let accountSerializer: FMShankSerializer | undefined = undefined;
-      console.log(dataBuffer.byteLength);
       if (dataBuffer.byteLength < ACCOUNT_MIN_SIZE) {
         // account data is not within the range of the account we are trying to deserialize
         return null;

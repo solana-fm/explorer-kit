@@ -11,9 +11,9 @@ import {
 import { createShankMetaplexAccountParser } from "../parsers/v2/account/metadata";
 import { createShankTokenV2Account } from "../parsers/v2/account/token-v2";
 import { AccParserSerializationType } from "../types/BaseAccountTypes";
+import { IdlItem } from "../types/IdlItem";
 import { FMShankSerializer } from "../types/KinobiTreeGenerator";
 import { ParserOutput } from "../types/Parsers";
-import { IdlItem } from "../types/IdlItem";
 
 export type AccountParsers = BorshAccountsCoder | Map<number | string, FMShankSerializer>;
 

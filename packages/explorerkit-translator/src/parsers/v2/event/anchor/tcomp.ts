@@ -1,5 +1,6 @@
-import { Idl as AnchorIdl, BorshInstructionCoder } from "@coral-xyz/anchor";
+import { BorshInstructionCoder,Idl as AnchorIdl } from "@coral-xyz/anchor";
 import { convertBNToNumberInObject } from "@solanafm/utils";
+
 import { EventParserInterface, ParserOutput, ParserType } from "../../../..";
 import { mapDataTypeToName } from "../../../../helpers/idl";
 import { IdlItem } from "../../../../types/IdlItem";

@@ -1,12 +1,13 @@
 import { BorshEventCoder, BorshInstructionCoder } from "@coral-xyz/anchor";
+
 import { createAnchorEventParser } from "../parsers/v2/event";
-import { ParserOutput } from "../types/Parsers";
-import { IdlItem } from "../types/IdlItem";
-import { createPhoenixEventParser } from "../parsers/v2/event/shank/phoenix";
-import { FMShankSerializer } from "../types/KinobiTreeGenerator";
 import { createBubblegumEventParser } from "../parsers/v2/event/anchor/bubblegum";
 import { createSPLCompEventParser } from "../parsers/v2/event/anchor/spl-compression";
 import { createTCompEventParser } from "../parsers/v2/event/anchor/tcomp";
+import { createPhoenixEventParser } from "../parsers/v2/event/shank/phoenix";
+import { IdlItem } from "../types/IdlItem";
+import { FMShankSerializer } from "../types/KinobiTreeGenerator";
+import { ParserOutput } from "../types/Parsers";
 
 export type EventParsers = BorshInstructionCoder | BorshEventCoder | Map<number | string, FMShankSerializer>;
 

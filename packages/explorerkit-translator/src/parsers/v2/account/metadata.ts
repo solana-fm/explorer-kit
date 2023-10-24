@@ -6,9 +6,9 @@ import { mapDataTypeToName } from "../../../helpers/idl";
 import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { AccountParserInterface } from "../../../interfaces";
 import { AccParserSerializationType } from "../../../types/BaseAccountTypes";
+import { IdlItem } from "../../../types/IdlItem";
 import { FMShankSerializer, KinobiTreeGeneratorType, ShankSerializer } from "../../../types/KinobiTreeGenerator";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
-import { IdlItem } from "../../../types/IdlItem";
 
 export const createShankMetaplexAccountParser: (
   idlItem: IdlItem,

@@ -5,10 +5,6 @@ import { convertBNToNumberInObject } from "@solanafm/utils";
 import { mapDataTypeToName } from "../../../helpers/idl";
 import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { mapMultisigAccountKeysToName } from "../../../helpers/multisig-checker";
-import { IdlItem } from "../../../types/IdlItem";
-import { InstructionParserInterface } from "../../../interfaces";
-import { ParserOutput, ParserType } from "../../../types/Parsers";
-import { serializeTransferFeeExt } from "./token-2022-extensions";
 import {
   ConfidentialTransferExtensionIDL,
   CpiGuardExtensionIDL,
@@ -17,6 +13,10 @@ import {
   MemoTransferExtensionIDL,
   TransferFeeExtensionIDL,
 } from "../../../idls/token-22/extensions";
+import { InstructionParserInterface } from "../../../interfaces";
+import { IdlItem } from "../../../types/IdlItem";
+import { ParserOutput, ParserType } from "../../../types/Parsers";
+import { serializeTransferFeeExt } from "./token-2022-extensions";
 
 export type ExtensionTypes = {
   extensionInstructionName: string;

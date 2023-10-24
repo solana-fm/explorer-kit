@@ -1,15 +1,27 @@
 {
   "name": "@solanafm/explorer-kit",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Public Solana Data Parsers",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --minify",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage",
+    "test": "vitest run",
     "clean": "rimraf .turbo && rimraf node_modules && rimraf dist",
     "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
+    "lint:fix": "TIMING=1 eslint \"src/**/*.ts*\" --fix",
     "publish-package": "npm publish --access=public"
   },
   "keywords": [],

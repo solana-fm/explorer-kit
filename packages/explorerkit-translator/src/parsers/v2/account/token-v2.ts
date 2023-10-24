@@ -7,9 +7,9 @@ import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { tryToSerializeCOptionPubkey } from "../../../helpers/rust-option";
 import { AccountParserInterface } from "../../../interfaces";
 import { AccParserSerializationType } from "../../../types/BaseAccountTypes";
+import { IdlItem } from "../../../types/IdlItem";
 import { FMShankSerializer, KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
-import { IdlItem } from "../../../types/IdlItem";
 
 export const createShankTokenV2Account: (idlItem: IdlItem) => AccountParserInterface = (idlItem: IdlItem) => {
   const idl = idlItem.idl as ShankIdl;

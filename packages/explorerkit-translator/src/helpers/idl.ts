@@ -1,4 +1,3 @@
-import { IdlAccountItem, IdlField, IdlType as AnchorIdlType, isIdlAccounts } from "../types/AnchorTypes";
 import {
   IdlInstructionAccount,
   IdlInstructionArg,
@@ -6,6 +5,8 @@ import {
   IdlType as ShankIdlType,
   IdlTypeStructField,
 } from "@solanafm/kinobi-lite";
+
+import { IdlAccountItem, IdlField, IdlType as AnchorIdlType, isIdlAccounts } from "../types/AnchorTypes";
 
 export type DataWithMappedType = {
   type: ShankIdlType | AnchorIdlType;

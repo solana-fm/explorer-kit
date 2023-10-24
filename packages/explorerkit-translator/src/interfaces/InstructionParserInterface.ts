@@ -7,12 +7,12 @@ import {
   createShankIxMemo,
 } from "../parsers/v2/instruction";
 import { createShankIxATA } from "../parsers/v2/instruction/ata";
+import { createNoopIx } from "../parsers/v2/instruction/noop";
 import { createShankIxPhoenix } from "../parsers/v2/instruction/phoenix";
 import { createTokenV2Ix } from "../parsers/v2/instruction/token-v2";
+import { IdlItem } from "../types/IdlItem";
 import { FMShankSerializer } from "../types/KinobiTreeGenerator";
 import { ParserOutput } from "../types/Parsers";
-import { IdlItem } from "../types/IdlItem";
-import { createNoopIx } from "../parsers/v2/instruction/noop";
 
 export type InstructionParsers = BorshInstructionCoder | Map<number | string, FMShankSerializer>;
 

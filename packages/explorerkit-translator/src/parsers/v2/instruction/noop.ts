@@ -4,8 +4,8 @@ import { convertBNToNumberInObject } from "@solanafm/utils";
 
 import { mapDataTypeToName } from "../../../helpers/idl";
 import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
-import { IdlItem } from "../../../types/IdlItem";
 import { InstructionParserInterface } from "../../../interfaces";
+import { IdlItem } from "../../../types/IdlItem";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
 
 export const createNoopIx: (idlItem: IdlItem) => InstructionParserInterface = (idlItem: IdlItem) => {
@@ -38,7 +38,7 @@ export const createNoopIx: (idlItem: IdlItem) => InstructionParserInterface = (i
 
       return null;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return null;
     }
   };

@@ -1,9 +1,10 @@
-import { Idl as AnchorIdl, BorshInstructionCoder } from "@coral-xyz/anchor";
+import { BorshInstructionCoder,Idl as AnchorIdl } from "@coral-xyz/anchor";
 import { convertBNToNumberInObject } from "@solanafm/utils";
+
 import { mapAccountKeysToName, mapDataTypeToName } from "../../../helpers/idl";
 import { InstructionParserInterface } from "../../../interfaces";
-import { ParserOutput, ParserType } from "../../../types/Parsers";
 import { IdlItem } from "../../../types/IdlItem";
+import { ParserOutput, ParserType } from "../../../types/Parsers";
 
 export const createAnchorInstructionParser: (idlItem: IdlItem) => InstructionParserInterface = (idlItem: IdlItem) => {
   const idl = idlItem.idl as AnchorIdl;

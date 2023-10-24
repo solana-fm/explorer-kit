@@ -3,7 +3,7 @@ export {
   checkIdlIsAnchor,
   checkIdlIsShank,
   checkIdlIsString,
-  getProgramIdl,
   getMultipleProgramIdls,
+  getProgramIdl,
 } from "./IdlRepository";
 export { addIdlToMap, getLocalIdl, IdlRepository } from "./LocalIdlRepository";

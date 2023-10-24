@@ -1,11 +1,12 @@
 import { Idl as ShankIdl } from "@solanafm/kinobi-lite";
 import { convertBNToNumberInObject } from "@solanafm/utils";
-import { FMShankSerializer, KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
+
+import { mapDataTypeToName } from "../../../helpers/idl";
 import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { AccountParserInterface } from "../../../interfaces";
-import { ParserOutput, ParserType } from "../../../types/Parsers";
-import { mapDataTypeToName } from "../../../helpers/idl";
 import { IdlItem } from "../../../types/IdlItem";
+import { FMShankSerializer, KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
+import { ParserOutput, ParserType } from "../../../types/Parsers";
 
 export const createShankConfigAccount: (idlItem: IdlItem, accountHash: string) => AccountParserInterface = (
   idlItem: IdlItem,

@@ -1,12 +1,13 @@
+import { IdlDefinedType,IdlTypeDefinedLink } from "@solanafm/kinobi-lite";
 import { capitalizeFirstLetter, convertBNToNumberInObject } from "@solanafm/utils";
-import { EventParserInterface } from "../../../../interfaces";
-import { ParserOutput, ParserType } from "../../../../types/Parsers";
+
 import { mapDataTypeToName } from "../../../../helpers/idl";
-import { IdlItem } from "../../../../types/IdlItem";
 import { KinobiTreeGenerator } from "../../../../helpers/KinobiTreeGenerator";
-import { KinobiTreeGeneratorType } from "../../../../types/KinobiTreeGenerator";
 import { PhoenixIDL } from "../../../../idls/phoenix";
-import { IdlTypeDefinedLink, IdlDefinedType } from "@solanafm/kinobi-lite";
+import { EventParserInterface } from "../../../../interfaces";
+import { IdlItem } from "../../../../types/IdlItem";
+import { KinobiTreeGeneratorType } from "../../../../types/KinobiTreeGenerator";
+import { ParserOutput, ParserType } from "../../../../types/Parsers";
 
 export const createPhoenixEventParser: (idlItem: IdlItem) => EventParserInterface = (idlItem: IdlItem) => {
   const idl = idlItem.idl as string;

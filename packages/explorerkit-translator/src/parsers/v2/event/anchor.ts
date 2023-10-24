@@ -1,9 +1,10 @@
-import { Idl as AnchorIdl, BorshEventCoder } from "@coral-xyz/anchor";
+import { BorshEventCoder,Idl as AnchorIdl } from "@coral-xyz/anchor";
 import { convertBNToNumberInObject } from "@solanafm/utils";
-import { EventParserInterface } from "../../../interfaces";
-import { ParserOutput, ParserType } from "../../../types/Parsers";
+
 import { mapDataTypeToName } from "../../../helpers/idl";
+import { EventParserInterface } from "../../../interfaces";
 import { IdlItem } from "../../../types/IdlItem";
+import { ParserOutput, ParserType } from "../../../types/Parsers";
 
 export const createAnchorEventParser: (idlItem: IdlItem) => EventParserInterface = (idlItem: IdlItem) => {
   const idl = idlItem.idl as AnchorIdl;

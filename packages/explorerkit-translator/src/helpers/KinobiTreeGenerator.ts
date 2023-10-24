@@ -593,7 +593,7 @@ export class KinobiTreeGenerator {
         return [keyName, f64()];
 
       default:
-        console.log(field);
+        console.error("Unidentifiable field of:", field);
         return ["null", null];
     }
   }

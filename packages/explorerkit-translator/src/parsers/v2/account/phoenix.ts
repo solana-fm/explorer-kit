@@ -1,11 +1,12 @@
 import { convertBNToNumberInObject } from "@solanafm/utils";
-import { KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
-import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
-import { AccountParserInterface } from "../../../interfaces";
-import { ParserOutput, ParserType } from "../../../types/Parsers";
+
 import { mapDataTypeToName } from "../../../helpers/idl";
-import { IdlItem } from "../../../types/IdlItem";
+import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { PhoenixIDL } from "../../../idls/phoenix";
+import { AccountParserInterface } from "../../../interfaces";
+import { IdlItem } from "../../../types/IdlItem";
+import { KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
+import { ParserOutput, ParserType } from "../../../types/Parsers";
 
 export const createShankPhoenixAccount: (idlItem: IdlItem) => AccountParserInterface = (idlItem: IdlItem) => {
   const idl = idlItem.idl as string;

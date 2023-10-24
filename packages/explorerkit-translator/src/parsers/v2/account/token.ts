@@ -4,9 +4,9 @@ import { convertBNToNumberInObject } from "@solanafm/utils";
 import { mapDataTypeToName } from "../../../helpers/idl";
 import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { AccountParserInterface } from "../../../interfaces";
+import { IdlItem } from "../../../types/IdlItem";
 import { FMShankSerializer, KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
-import { IdlItem } from "../../../types/IdlItem";
 
 export const createShankTokenAccount: (idlItem: IdlItem) => AccountParserInterface = (idlItem: IdlItem) => {
   const idl = idlItem.idl as ShankIdl;

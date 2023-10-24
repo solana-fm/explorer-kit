@@ -1,7 +1,8 @@
 import { Idl as AnchorIdl } from "@coral-xyz/anchor";
+
 import { ErrorParserInterface } from "../../../interfaces";
-import { ParserType } from "../../../types/Parsers";
 import { IdlItem } from "../../../types/IdlItem";
+import { ParserType } from "../../../types/Parsers";
 
 // Copied directly from Anchor Framework
 export const LangErrorCode = {
