@@ -65,6 +65,27 @@ describe("createShankParser", () => {
       }
     }
   });
+
+  it("should construct an shank instruction parser for a given valid IDL and parses a createAccountWithSeed instruction", async () => {
+    const programId = "11111111111111111111111111111111";
+    const idlItem = await getProgramIdl(programId);
+    const instructionData =
+      "2Xryq2Rm8AVqNzd2gDapkK7mqHKfz5Pu6XYXP4wRtDaYaPaSgoViaxxNzRpvkj2p91YVCJq1He1pGHENJ3RfofrAxuxeYfo96X2kRyxGLGDLjcwZxZGRHJ7NDE6RExSMrK8M85D";
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const instructionParser = parser.createParser(ParserType.INSTRUCTION);
+
+      if (instructionParser && checkIfInstructionParser(instructionParser)) {
+        const decodedData = instructionParser.parseInstructions(instructionData);
+        expect(decodedData).not.toBeNull();
+        expect(decodedData?.type).toBe("instruction");
+        expect(decodedData?.name).toBe("createAccountWithSeed");
+        expect(decodedData?.data["seed"]).toBe("stake:2");
+        expect(decodedData?.data["lamports"]).toBe("12000000000");
+      }
+    }
+  });
 });
 
 describe("createCustomKinobiParser", () => {

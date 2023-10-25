@@ -29,6 +29,7 @@ import {
   unit,
 } from "@metaplex-foundation/umi/serializers";
 import {
+  assertStringTypeNode,
   assertStructFieldTypeNode,
   bytesTypeNode,
   createFromIdls,
@@ -110,6 +111,23 @@ export class KinobiTreeGenerator {
                 ...node,
                 child: bytesTypeNode({
                   kind: "remainder",
+                }),
+              });
+            },
+          },
+        ])
+      );
+    } else if (idl.metadata.address === "11111111111111111111111111111111") {
+      kinobiTree.update(
+        new TransformNodesVisitor([
+          {
+            selector: { kind: "structFieldTypeNode", name: "seed" },
+            transformer: (node) => {
+              assertStructFieldTypeNode(node);
+              return structFieldTypeNode({
+                ...node,
+                child: stringTypeNode({
+                  size: prefixedSize(numberTypeNode("u64")),
                 }),
               });
             },
