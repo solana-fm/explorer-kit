@@ -22,7 +22,7 @@
     "clean": "rimraf .turbo && rimraf node_modules && rimraf dist",
     "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
     "lint:fix": "TIMING=1 eslint \"src/**/*.ts*\" --fix",
-    "publish-package": "npm publish --access=public"
+    "publish-package": "pnpm build && npm publish --access=public"
   },
   "keywords": [],
   "author": "SolanaFM",
