@@ -1,6 +1,6 @@
 {
   "name": "@solanafm/explorer-kit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Public Solana Data Parsers",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
