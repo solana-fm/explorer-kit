@@ -229,3 +229,37 @@ describe("createShankPhoenixParserWithMappingSupport", () => {
     }
   });
 });
+
+describe("createAnchorParserWithSelfCPILogSupport", () => {
+  it("should construct an anchor instruction parser for a given valid IDL", async () => {
+    const programId = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const instructionParser = parser.createParser(ParserType.INSTRUCTION);
+
+      expect(instructionParser).not.toBeNull();
+      expect(checkIfInstructionParser(instructionParser)).toBe(true);
+    }
+  });
+
+  it("should construct an anchor instruction parser for a given valid IDL and parses the Anchor Self-CPI log instruction", async () => {
+    const programId = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
+    const instructionData =
+      "QMqFu4fYGGeUEysFnenhAvqN6w9n3A28YStPLfH9Rz9Ak2KWiKnYskS7xVokXrYXKgUepEwzD55sME9SDzTXK14VWihVaadk3XTrGUB3BanrEJkRJJWwYnwc3MuVLERVzM1bN9TykYHxcvEbRvTGrpBU7hpneBU9FGTfhdP6WfjUBdR";
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const instructionParser = parser.createParser(ParserType.INSTRUCTION);
+      if (instructionParser && checkIfInstructionParser(instructionParser)) {
+        const decodedData = instructionParser.parseInstructions(instructionData);
+        expect(decodedData).not.toBeNull();
+        expect(decodedData?.type).toBe("instruction");
+        expect(decodedData?.name).toBe("Anchor Self-CPI Log");
+        expect(decodedData?.data).toBeNull();
+      }
+    }
+  });
+});
