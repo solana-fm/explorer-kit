@@ -1,5 +1,11 @@
 # @solanafm/explorer-kit
 
+## 1.0.2
+
+### Patch Changes
+
+- caab7e5: fix: fix system program instructions string args not decoding properly due to bincode serialization"
+
 ## 1.0.1
 
 ### Patch Changes
