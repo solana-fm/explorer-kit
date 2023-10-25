@@ -262,4 +262,27 @@ describe("createAnchorParserWithSelfCPILogSupport", () => {
       }
     }
   });
+
+  it("should construct an anchor instruction parser for a given valid IDL, parses the Anchor Self-CPI log instruction and ensure that the account keys are properly mapped", async () => {
+    const programId = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
+    const instructionData =
+      "QMqFu4fYGGeUEysFnenhAvqN6w9n3A28YStPLfH9Rz9Ak2KWiKnYskS7xVokXrYXKgUepEwzD55sME9SDzTXK14VWihVaadk3XTrGUB3BanrEJkRJJWwYnwc3MuVLERVzM1bN9TykYHxcvEbRvTGrpBU7hpneBU9FGTfhdP6WfjUBdR";
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const instructionParser = parser.createParser(ParserType.INSTRUCTION);
+      if (instructionParser && checkIfInstructionParser(instructionParser)) {
+        const decodedData = instructionParser.parseInstructions(instructionData, [
+          "D8cy77BBepLMngZx6ZukaTff5hCt1HrWyKk3Hnd9oitf",
+        ]);
+        expect(decodedData).not.toBeNull();
+        expect(decodedData?.type).toBe("instruction");
+        expect(decodedData?.name).toBe("Anchor Self-CPI Log");
+        expect(decodedData?.data).toBeDefined();
+        expect(decodedData?.data?.logAuthority).toBeDefined();
+        expect(decodedData?.data?.logAuthority?.data).toBe("D8cy77BBepLMngZx6ZukaTff5hCt1HrWyKk3Hnd9oitf");
+      }
+    }
+  });
 });

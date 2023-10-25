@@ -25,7 +25,15 @@ export const createAnchorInstructionParser: (idlItem: IdlItem) => InstructionPar
         if (ixDisc.equals(eventDisc)) {
           return {
             name: "Anchor Self-CPI Log",
-            data: null,
+            // Checks if there's an account keys array that's being supplied, if not return an empty data since there's no account keys that's being mapped
+            data: accountKeys
+              ? {
+                  logAuthority: {
+                    data: accountKeys[0],
+                    type: "publicKey",
+                  },
+                }
+              : null,
             type: ParserType.INSTRUCTION,
           };
         }
