@@ -1,0 +1,25 @@
+{
+  "name": "ek-event-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "build": "tsc --outDir dist",
+    "clean": "rm -r dist && rm -r node_modules"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@solanafm/explorer-kit": "^1.0.0",
+    "@solanafm/explorer-kit-idls": "^1.0.0",
+    "@types/node": "^20.8.7",
+    "axios": "^1.5.1",
+    "dotenv": "^16.3.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
