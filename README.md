@@ -90,12 +90,12 @@ const historicalSFMIdlItem = await getProgramIdl(programId, {
 const ixData = "1AMTAauCh9UPEJKKd6LnGGtWqFvRs2aUZkv9r6wNe3PTzB1KS9TbwYzM8Cp7vUSDYZXTxXJp5M"
 // Checks if SFMIdlItem is defined, if not you will not be able to initialize the parser layout
 if (SFMIdlItem) {
-    const parser = new SolanaFMParser(SFMIdlItem);
-    const instructionParser = parser.createParser(ParserType.INSTRUCTION);
+    const parser = new SolanaFMParser(SFMIdlItem, programId);
+    const instructionParser = instructionParser.createParser(ParserType.INSTRUCTION);
 
     if (instructionParser && checkIfInstructionParser(instructionParser)) {
         // Parse the transaction
-        const decodedData = parser.parseTransaction(ixData);
+        const decodedData = parser.parseInstructions(ixData);
     }
 }
 ```
