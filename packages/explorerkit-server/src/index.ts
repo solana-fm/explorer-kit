@@ -1,9 +1,9 @@
-import express, { Request, Response } from "express";
-import bodyParser from "body-parser";
-import { SolanaFMParser, checkIfAccountParser, checkIfInstructionParser, ParserType } from "@solanafm/explorer-kit";
+import { Message, MessageV0, PublicKey, VersionedTransaction } from "@solana/web3.js";
+import { checkIfAccountParser, checkIfInstructionParser, ParserType, SolanaFMParser } from "@solanafm/explorer-kit";
 import { getProgramIdl } from "@solanafm/explorer-kit-idls";
-import { VersionedTransaction, Message, MessageV0, PublicKey } from "@solana/web3.js";
+import bodyParser from "body-parser";
 import bs58 from "bs58";
+import express, { Request, Response } from "express";
 
 interface Account {
   ownerProgram: string;
@@ -161,6 +161,4 @@ function isValidBase64(str: string): boolean {
 
 // Start the server
 const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT);
