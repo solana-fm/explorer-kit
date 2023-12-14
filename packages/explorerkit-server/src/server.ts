@@ -16,7 +16,13 @@ interface DecodeAccountsRequestBody {
 
 interface DecodedAccount {
   error: string | null;
-  decodedData: any | null;
+  decodedData: DecodedAccountData | null;
+}
+
+interface DecodedAccountData {
+  owner: string;
+  name: string;
+  data: any;
 }
 
 interface DecodeTransactionsRequestBody {
@@ -25,7 +31,13 @@ interface DecodeTransactionsRequestBody {
 
 interface DecodedTransactions {
   error: string | null;
-  decodedInstructions: any[] | null;
+  decodedInstructions: DecodedInstruction[] | null;
+}
+
+interface DecodedInstruction {
+  programId: string;
+  name: string;
+  data: any;
 }
 
 interface GenericInstruction {
@@ -63,7 +75,12 @@ app.post("/decode/accounts", async (req: Request, res: Response) => {
     if (eventParser && checkIfAccountParser(eventParser)) {
       // Parse the transaction
       const decodedData = eventParser.parseAccount(account.data);
-      decodedAccounts.push({ error: null, decodedData });
+      decodedAccounts.push({
+        error: null,
+        decodedData: decodedData
+          ? { owner: account.ownerProgram, name: decodedData?.name, data: decodedData?.data }
+          : null,
+      });
       continue;
     } else {
       decodedAccounts.push({ error: "Failed to parse account", decodedData: null });
@@ -133,7 +150,7 @@ app.post("/decode/transactions", async (req: Request, res: Response) => {
           if (instructionParser && checkIfInstructionParser(instructionParser)) {
             // Parse the transaction
             const decodedInstruction = instructionParser.parseInstructions(bs58.encode(instruction.data));
-            decodedInstructions.push(decodedInstruction);
+            decodedInstructions.push({ name: decodedInstruction?.name, data: decodedInstruction?.data, programId });
           }
         } else {
           decodedAccounts.push({ error: "Failed to find program IDL", decodedInstructions: null });

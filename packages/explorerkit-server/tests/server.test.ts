@@ -22,6 +22,7 @@ describe("Server API Tests", () => {
         {
           error: null,
           decodedData: {
+            owner: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
             name: "tokenAccount",
             data: {
               mint: "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
@@ -35,7 +36,6 @@ describe("Server API Tests", () => {
               delegatedAmount: "0",
               closeAuthority: null,
             },
-            type: "account",
           },
         },
       ],
@@ -63,7 +63,7 @@ describe("Server API Tests", () => {
                 discriminator: 3,
                 computeUnitPrice: 50000,
               },
-              type: "instruction",
+              programId: "ComputeBudget111111111111111111111111111111",
             },
             {
               name: "setComputeUnitLimit",
@@ -71,7 +71,7 @@ describe("Server API Tests", () => {
                 discriminator: 2,
                 computeUnitLimit: 200000,
               },
-              type: "instruction",
+              programId: "ComputeBudget111111111111111111111111111111",
             },
             {
               name: "authorize",
@@ -82,7 +82,7 @@ describe("Server API Tests", () => {
                   enumType: "withdrawer",
                 },
               },
-              type: "instruction",
+              programId: "Stake11111111111111111111111111111111111111",
             },
           ],
         },
