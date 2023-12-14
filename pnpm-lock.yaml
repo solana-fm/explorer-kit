@@ -75,9 +75,6 @@ importers:
 
   packages/explorerkit-server:
     dependencies:
-      '@coral-xyz/anchor':
-        specifier: ^0.27.0
-        version: 0.27.0
       '@solana/web3.js':
         specifier: ^1.87.2
         version: 1.87.2
@@ -87,9 +84,6 @@ importers:
       '@solanafm/explorer-kit-idls':
         specifier: workspace:*
         version: link:../explorerkit-idls
-      '@solanafm/kinobi-lite':
-        specifier: ^0.12.0
-        version: 0.12.0
       axios:
         specifier: ^1.3.3
         version: 1.3.3
@@ -118,9 +112,6 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^0.34.2
         version: 0.34.2(vitest@0.34.2)
-      axios-mock-adapter:
-        specifier: ^1.22.0
-        version: 1.22.0(axios@1.3.3)
       eslint:
         specifier: ^8.47.0
         version: 8.48.0
@@ -1432,16 +1423,6 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /axios-mock-adapter@1.22.0(axios@1.3.3):
-    resolution: {integrity: sha512-dmI0KbkyAhntUR05YY96qg2H6gg0XMl2+qTW0xmYg6Up+BFBAJYRLROMXRdDEL06/Wqwa0TJThAYvFtSFdRCZw==}
-    peerDependencies:
-      axios: '>= 0.17.0'
-    dependencies:
-      axios: 1.3.3
-      fast-deep-equal: 3.1.3
-      is-buffer: 2.0.5
-    dev: true
-
   /axios@1.3.3:
     resolution: {integrity: sha512-eYq77dYIFS77AQlhzEL937yUBSepBfPIe8FcgEDN35vMNZKMrs81pgnyrQpwfy4NF4b4XWX1Zgx7yX+25w8QJA==}
     dependencies:
@@ -1450,6 +1431,7 @@ packages:
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
+    dev: false
 
   /balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -2489,6 +2471,7 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: false
 
   /for-each@0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -2860,11 +2843,6 @@ packages:
     dependencies:
       call-bind: 1.0.5
       has-tostringtag: 1.0.0
-    dev: true
-
-  /is-buffer@2.0.5:
-    resolution: {integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==}
-    engines: {node: '>=4'}
     dev: true
 
   /is-callable@1.2.7:
@@ -3742,6 +3720,7 @@ packages:
 
   /proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+    dev: false
 
   /pseudomap@1.0.2:
     resolution: {integrity: sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==}
