@@ -105,10 +105,10 @@ app.post("/decode/transactions", async (req: Request, res: Response) => {
   let decodedAccounts: DecodedTransactions[] = [];
   for (var encodedTx of transactions) {
     let txBuffer = null;
-    if (isValidBase64(encodedTx)) {
-      txBuffer = Buffer.from(encodedTx, "base64");
-    } else if (isValidBase58(encodedTx)) {
+    if (isValidBase58(encodedTx)) {
       txBuffer = Buffer.from(bs58.decode(encodedTx));
+    } else if (isValidBase64(encodedTx)) {
+      txBuffer = Buffer.from(encodedTx, "base64");
     } else {
       decodedAccounts.push({ error: "'transaction' is not a valid base64 string.", decodedInstructions: null });
       continue;
