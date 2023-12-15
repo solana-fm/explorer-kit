@@ -1,5 +1,11 @@
 import { Message, MessageV0, VersionedTransaction } from "@solana/web3.js";
-import { checkIfAccountParser, checkIfInstructionParser, ParserType, SolanaFMParser } from "@solanafm/explorer-kit";
+import {
+  checkIfAccountParser,
+  ParserType,
+  InstructionParserInterface,
+  AccountParserInterface,
+  SolanaFMParser,
+} from "@solanafm/explorer-kit";
 import { getProgramIdl } from "@solanafm/explorer-kit-idls";
 import bodyParser from "body-parser";
 import bs58 from "bs58";
@@ -52,6 +58,7 @@ app.use(bodyParser.json());
 app.post("/decode/accounts", async (req: Request, res: Response) => {
   const { accounts } = req.body as DecodeAccountsRequestBody;
 
+  let accountParsers: { [key: string]: AccountParserInterface } = {};
   let decodedAccounts: DecodedAccount[] = [];
   for (var account of accounts) {
     if (!isValidBase58(account.ownerProgram)) {
@@ -63,29 +70,28 @@ app.post("/decode/accounts", async (req: Request, res: Response) => {
       continue;
     }
 
-    const SFMIdlItem = await getProgramIdl(account.ownerProgram);
-    if (SFMIdlItem === null) {
-      decodedAccounts.push({ error: "Failed to find program IDL", decodedData: null });
-      continue;
+    let accountParser = accountParsers[account.ownerProgram];
+    if (accountParser == undefined) {
+      const SFMIdlItem = await getProgramIdl(account.ownerProgram);
+      if (SFMIdlItem === null) {
+        decodedAccounts.push({ error: "Failed to find program IDL", decodedData: null });
+        continue;
+      }
+
+      const parser = new SolanaFMParser(SFMIdlItem, account.ownerProgram);
+      accountParser = parser.createParser(ParserType.ACCOUNT) as AccountParserInterface;
+      accountParsers[account.ownerProgram] = accountParser;
     }
 
-    const parser = new SolanaFMParser(SFMIdlItem, account.ownerProgram);
-    const eventParser = parser.createParser(ParserType.ACCOUNT);
-
-    if (eventParser && checkIfAccountParser(eventParser)) {
-      // Parse the transaction
-      const decodedData = eventParser.parseAccount(account.data);
-      decodedAccounts.push({
-        error: null,
-        decodedData: decodedData
-          ? { owner: account.ownerProgram, name: decodedData?.name, data: decodedData?.data }
-          : null,
-      });
-      continue;
-    } else {
-      decodedAccounts.push({ error: "Failed to parse account", decodedData: null });
-      continue;
-    }
+    // Parse the transaction
+    const decodedData = accountParser.parseAccount(account.data);
+    decodedAccounts.push({
+      error: null,
+      decodedData: decodedData
+        ? { owner: account.ownerProgram, name: decodedData?.name, data: decodedData?.data }
+        : null,
+    });
+    continue;
   }
 
   return res.status(200).json({ decodedAccounts });
@@ -95,6 +101,7 @@ app.post("/decode/accounts", async (req: Request, res: Response) => {
 app.post("/decode/transactions", async (req: Request, res: Response) => {
   const { transactions } = req.body as DecodeTransactionsRequestBody;
 
+  let instructionParsers: { [key: string]: InstructionParserInterface } = {};
   let decodedAccounts: DecodedTransactions[] = [];
   for (var encodedTx of transactions) {
     let txBuffer = null;
@@ -141,20 +148,23 @@ app.post("/decode/transactions", async (req: Request, res: Response) => {
       let decodedInstructions: any[] = [];
       for (var instruction of instructions) {
         const programId = instruction.programId.toString();
+        let instructionParser = instructionParsers[programId];
 
-        const SFMIdlItem = await getProgramIdl(programId);
-        if (SFMIdlItem) {
-          const parser = new SolanaFMParser(SFMIdlItem, programId);
-          const instructionParser = parser.createParser(ParserType.INSTRUCTION);
-
-          if (instructionParser && checkIfInstructionParser(instructionParser)) {
-            // Parse the transaction
-            const decodedInstruction = instructionParser.parseInstructions(bs58.encode(instruction.data));
-            decodedInstructions.push({ name: decodedInstruction?.name, data: decodedInstruction?.data, programId });
+        if (instructionParser == undefined) {
+          const SFMIdlItem = await getProgramIdl(programId);
+          if (SFMIdlItem) {
+            const parser = new SolanaFMParser(SFMIdlItem, programId);
+            instructionParser = parser.createParser(ParserType.INSTRUCTION) as InstructionParserInterface;
+            instructionParsers[programId] = instructionParser;
+          } else {
+            decodedAccounts.push({ error: "Failed to find program IDL", decodedInstructions: null });
+            continue;
           }
-        } else {
-          decodedAccounts.push({ error: "Failed to find program IDL", decodedInstructions: null });
         }
+
+        // Parse the transaction
+        const decodedInstruction = instructionParser.parseInstructions(bs58.encode(instruction.data));
+        decodedInstructions.push({ name: decodedInstruction?.name, data: decodedInstruction?.data, programId });
       }
 
       decodedAccounts.push({ error: null, decodedInstructions });
