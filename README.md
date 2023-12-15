@@ -68,7 +68,7 @@ const SFMIdlItem = await getProgramIdl(programId);
 // You can also get an IDL at a specific slot context if you're trying to histroically parse a transaction / account
 // but the IDL might not be backwards compatible.
 const historicalSFMIdlItem = await getProgramIdl(programId, {
-    slotContext: 132322893,
+  slotContext: 132322893,
 });
 ```
 
@@ -90,12 +90,12 @@ const historicalSFMIdlItem = await getProgramIdl(programId, {
 const ixData = "1AMTAauCh9UPEJKKd6LnGGtWqFvRs2aUZkv9r6wNe3PTzB1KS9TbwYzM8Cp7vUSDYZXTxXJp5M"
 // Checks if SFMIdlItem is defined, if not you will not be able to initialize the parser layout
 if (SFMIdlItem) {
-    const parser = new SolanaFMParser(SFMIdlItem);
-    const instructionParser = parser.createParser(ParserType.INSTRUCTION);
+    const parser = new SolanaFMParser(SFMIdlItem, programId);
+    const instructionParser = instructionParser.createParser(ParserType.INSTRUCTION);
 
     if (instructionParser && checkIfInstructionParser(instructionParser)) {
         // Parse the transaction
-        const decodedData = parser.parseTransaction(ixData);
+        const decodedData = parser.parseInstructions(ixData);
     }
 }
 ```
@@ -105,7 +105,7 @@ Parsing an event data:
 ```ts
 import { SolanaFMParser. checkIfEventParser, ParserType } from "@solanafm/explorer-kit"
 
-// For event data they have to base-64 encoded and they can be extracted from logs or a inner instruction with CPI logs. 
+// For event data they have to base-64 encoded and they can be extracted from logs or a inner instruction with CPI logs.
 // Phoenix Program Event Data
 const eventData = "DwEABF2SDQAAAABDfDtlAAAAAKiVfA0AAAAAL9p3EN7QVm+wCbiCUn2jVyJyazsZQYgqVRhf6h2a/pX5SjR+9eBu2sQU7NYr1TEeH7vRFNOiXSyDLJ9g+fDJrwMAAgAABPzrK7CsLqR5NiVFXYwyp7QgatDNQXbn3JA8wOVXQfANFxMTAAAAAIB/AAAAAAAAg7MAAAAAAAAAAAAAAAAAAAIBAAT86yuwrC6keTYlRV2MMqe0IGrQzUF259yQPMDlV0HwDhcTEwAAAACCfwAAAAAAAByBAAAAAAAA6EwCAAAAAAAGAgAAAAAAAAAAAAAAAAAAAAAAnzQBAAAAAABzEb6ZAAAAALveBwAAAAAA"
 const parser = new SolanaFMParser(SFMIdlItem);
@@ -120,18 +120,21 @@ if (eventParser && checkIfEventParser(eventParser)) {
 Parsing an account data:
 
 ```ts
-import { SolanaFMParser. checkIfAccountParser, ParserType } from "@solanafm/explorer-kit"
+import { SolanaFMParser, checkIfAccountParser, ParserType } from "@solanafm/explorer-kit";
+
+const SFMIdlItem = await getProgramIdl(programId);
 
 // Account data have to be base-64 encoded
 // Stake Pool Account Data
-const accountData = "AWq1iyr99ATwNekhxZcljopQjeBixmWt+p/5CTXBmRbd3Noj1MlCDU6CVh08awajdvCUB/G3tPyo/emrHFdD8Wfh4Pippvxf8kLk81F78B7Wst0ZUaC6ttlDVyWShgT3cP/LqkIDCUdVLBkThURwDuYX1RR+JyWBHNvgnIkDCm914o2jckW1NrCzDbv9Jn/RWcT0cAMYKm8U4SfG/F878wV0XwxEYxirEMlfQJSVhXDNBXRlpU2rFNnd40gahv7V/Mvj/aPav/vdTOwRdFALTRZQlijB9G5myz+0QWe7U7EGIQbd9uHXZaGT2cvhRs7reawctIXtX1s3kTqM9YV+/wCpE2P1ZIWKAQDUAp5GdmQBAMkBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQJwAAAAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECcAAAAAAAAAAAAAAAAAAABWHWK1dGQBAAgnQqFYigEAv0rw1gHIAQAPfXpGLPQBABAnAAAAAAAAAAAAAAAAAAAAicd7jscBANVMdCNW7gEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+const accountData =
+  "AWq1iyr99ATwNekhxZcljopQjeBixmWt+p/5CTXBmRbd3Noj1MlCDU6CVh08awajdvCUB/G3tPyo/emrHFdD8Wfh4Pippvxf8kLk81F78B7Wst0ZUaC6ttlDVyWShgT3cP/LqkIDCUdVLBkThURwDuYX1RR+JyWBHNvgnIkDCm914o2jckW1NrCzDbv9Jn/RWcT0cAMYKm8U4SfG/F878wV0XwxEYxirEMlfQJSVhXDNBXRlpU2rFNnd40gahv7V/Mvj/aPav/vdTOwRdFALTRZQlijB9G5myz+0QWe7U7EGIQbd9uHXZaGT2cvhRs7reawctIXtX1s3kTqM9YV+/wCpE2P1ZIWKAQDUAp5GdmQBAMkBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQJwAAAAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECcAAAAAAAAAAAAAAAAAAABWHWK1dGQBAAgnQqFYigEAv0rw1gHIAQAPfXpGLPQBABAnAAAAAAAAAAAAAAAAAAAAicd7jscBANVMdCNW7gEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
 
 const parser = new SolanaFMParser(SFMIdlItem);
 const eventParser = parser.createParser(ParserType.ACCOUNT);
 
 if (eventParser && checkIfAccountParser(eventParser)) {
-    // Parse the transaction
-    const decodedData = parser.parseAccount(accountData);
+  // Parse the transaction
+  const decodedData = eventParser.parseAccount(accountData);
 }
 ```
 
@@ -141,12 +144,11 @@ Once the data is parsed, the returned data type will look something like this
 export type ParserOutput = {
   // The name of the struct that's being used to parse the data
   name: string;
-  // The parsed data according to the IDL schema   
+  // The parsed data according to the IDL schema
   data: any;
-  // ParserType depends on the type of parser you have initialized  
+  // ParserType depends on the type of parser you have initialized
   type: ParserType;
 } | null;
-
 ```
 
 More to be added soon...
@@ -161,8 +163,8 @@ You can also checkout the [examples](https://github.com/solana-fm/explorer-kit/e
 
 ## Supported Programs
 
- | Program IDs                                                                             | Program                        | Working Parsers                              |
-|-----------------------------------------------------------------------------------------|--------------------------------|----------------------------------------------|
+| Program IDs                                                                             | Program                        | Working Parsers                              |
+| --------------------------------------------------------------------------------------- | ------------------------------ | -------------------------------------------- |
 | 11111111111111111111111111111111                                                        | System Program                 | Account, Instructions                        |
 | Config1111111111111111111111111111111111111                                             | Config Program                 | Account, Instructions                        |
 | Stake11111111111111111111111111111111111111                                             | Stake Program                  | Account, Instructions                        |
