@@ -53,7 +53,7 @@ describe("Server API Tests", () => {
 
     expect(res.status).toBe(200);
     expect(res.body).toMatchObject({
-      decodedAccounts: [
+      decodedTransactions: [
         {
           error: null,
           decodedInstructions: [

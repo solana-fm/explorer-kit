@@ -1,11 +1,5 @@
 import { Message, MessageV0, VersionedTransaction } from "@solana/web3.js";
-import {
-  checkIfAccountParser,
-  ParserType,
-  InstructionParserInterface,
-  AccountParserInterface,
-  SolanaFMParser,
-} from "@solanafm/explorer-kit";
+import { ParserType, InstructionParserInterface, AccountParserInterface, SolanaFMParser } from "@solanafm/explorer-kit";
 import { getProgramIdl } from "@solanafm/explorer-kit-idls";
 import bodyParser from "body-parser";
 import bs58 from "bs58";
@@ -102,7 +96,7 @@ app.post("/decode/transactions", async (req: Request, res: Response) => {
   const { transactions } = req.body as DecodeTransactionsRequestBody;
 
   let instructionParsers: { [key: string]: InstructionParserInterface } = {};
-  let decodedAccounts: DecodedTransactions[] = [];
+  let decodedTransactions: DecodedTransactions[] = [];
   for (var encodedTx of transactions) {
     let txBuffer = null;
     if (isValidBase58(encodedTx)) {
@@ -110,7 +104,7 @@ app.post("/decode/transactions", async (req: Request, res: Response) => {
     } else if (isValidBase64(encodedTx)) {
       txBuffer = Buffer.from(encodedTx, "base64");
     } else {
-      decodedAccounts.push({ error: "'transaction' is not a valid base64 string.", decodedInstructions: null });
+      decodedTransactions.push({ error: "'transaction' is not a valid base64 string.", decodedInstructions: null });
       continue;
     }
 
@@ -121,7 +115,7 @@ app.post("/decode/transactions", async (req: Request, res: Response) => {
         for (var ix of tx.message.instructions) {
           let programId = tx.message.accountKeys[ix.programIdIndex];
           if (programId === undefined) {
-            decodedAccounts.push({ error: "programId not found in accounts", decodedInstructions: null });
+            decodedTransactions.push({ error: "programId not found in accounts", decodedInstructions: null });
             continue;
           }
           instructions.push({
@@ -133,7 +127,7 @@ app.post("/decode/transactions", async (req: Request, res: Response) => {
         for (var inst of tx.message.compiledInstructions) {
           let programId = tx.message.staticAccountKeys[inst.programIdIndex];
           if (programId === undefined) {
-            decodedAccounts.push({ error: "programId not found in staticAccountKeys", decodedInstructions: null });
+            decodedTransactions.push({ error: "programId not found in staticAccountKeys", decodedInstructions: null });
             continue;
           }
           instructions.push({
@@ -157,7 +151,7 @@ app.post("/decode/transactions", async (req: Request, res: Response) => {
             instructionParser = parser.createParser(ParserType.INSTRUCTION) as InstructionParserInterface;
             instructionParsers[programId] = instructionParser;
           } else {
-            decodedAccounts.push({ error: "Failed to find program IDL", decodedInstructions: null });
+            decodedTransactions.push({ error: "Failed to find program IDL", decodedInstructions: null });
             continue;
           }
         }
@@ -167,13 +161,13 @@ app.post("/decode/transactions", async (req: Request, res: Response) => {
         decodedInstructions.push({ name: decodedInstruction?.name, data: decodedInstruction?.data, programId });
       }
 
-      decodedAccounts.push({ error: null, decodedInstructions });
+      decodedTransactions.push({ error: null, decodedInstructions });
     } catch (e: any) {
-      decodedAccounts.push({ error: e.message, decodedInstructions: null });
+      decodedTransactions.push({ error: e.message, decodedInstructions: null });
     }
   }
 
-  return res.status(200).json({ decodedAccounts });
+  return res.status(200).json({ decodedTransactions });
 });
 
 function isValidBase58(str: string): boolean {
