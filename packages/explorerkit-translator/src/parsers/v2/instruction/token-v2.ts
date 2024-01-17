@@ -19,6 +19,7 @@ import { InstructionParserInterface } from "../../../interfaces";
 import { IdlItem } from "../../../types/IdlItem";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
 import { serializeTransferFeeExt } from "./token-2022-extensions";
+import { MetadataPointerExtensionIdl } from "../../../idls/token-22/extensions/metadata-pointer";
 
 export type ExtensionTypes = {
   extensionInstructionName: string;
@@ -172,6 +173,28 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
               return {
                 name: ixSerializer.instructionName,
                 data: convertBNToNumberInObject(confidentialTransferFeeData),
+                type: ParserType.INSTRUCTION,
+              };
+            }
+            break;
+
+          // Metadata Pointer Extension Enum
+          case 39:
+            if (dataBuffer.byteLength < 2) {
+              return null;
+            }
+
+            const metadataPointerData = serializeExtension(
+              MetadataPointerExtensionIdl,
+              dataBuffer,
+              mapTypes,
+              accountKeys
+            );
+
+            if (metadataPointerData) {
+              return {
+                name: ixSerializer.instructionName,
+                data: convertBNToNumberInObject(metadataPointerData),
                 type: ParserType.INSTRUCTION,
               };
             }
