@@ -14,7 +14,7 @@
 1. Run `pnpm install` in the root of the repository to install all dependencies.
 2. Run `pnpm build` to create an initial build of the `explorerkit-idls` and `explorerkit-translator`
 3. You should now be able to edit the source code to your liking and run `pnpm dev` to ensure that your changes are being watched
-4. After you are dong with your changes, you can write test cases in the `tests` folder of the root of the package to ensure that your changes work as expected. You can run `pnpm test` in the root of the repository to run all the tests in the repository.
+4. After you are done with your changes, you can write test cases in the `tests` folder of the root of the package to ensure that your changes work as expected. You can run `pnpm test` in the root of the repository to run all the tests in the repository.
 
 ## Running Tests
 
