@@ -12,6 +12,7 @@ import {
   InterestBearingMintIDL,
   MemoTransferExtensionIDL,
   TransferFeeExtensionIDL,
+  TransferHookExtensionIDL,
 } from "../../../idls/token-22/extensions";
 import { InstructionParserInterface } from "../../../interfaces";
 import { IdlItem } from "../../../types/IdlItem";
@@ -131,6 +132,23 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
               return {
                 name: ixSerializer.instructionName,
                 data: convertBNToNumberInObject(cpiGuardData),
+                type: ParserType.INSTRUCTION,
+              };
+            }
+            break;
+
+          // Transfer Hook Extension Enum
+          case 36:
+            if (dataBuffer.byteLength < 2) {
+              return null;
+            }
+
+            const transferHookData = serializeExtension(TransferHookExtensionIDL, dataBuffer, mapTypes, accountKeys);
+
+            if (transferHookData) {
+              return {
+                name: ixSerializer.instructionName,
+                data: convertBNToNumberInObject(transferHookData),
                 type: ParserType.INSTRUCTION,
               };
             }
