@@ -6,6 +6,12 @@ Build & watch
 pnpm dev
 ```
 
+Start Dev Server with hot reloading
+
+```
+pnpm dev-serve
+```
+
 Start server
 
 ```

@@ -1,5 +1,5 @@
 import { Message, MessageV0, VersionedTransaction } from "@solana/web3.js";
-import { ParserType, InstructionParserInterface, AccountParserInterface, SolanaFMParser } from "@solanafm/explorer-kit";
+import { AccountParserInterface, InstructionParserInterface, ParserType, SolanaFMParser } from "@solanafm/explorer-kit";
 import { getProgramIdl } from "@solanafm/explorer-kit-idls";
 import bodyParser from "body-parser";
 import bs58 from "bs58";
