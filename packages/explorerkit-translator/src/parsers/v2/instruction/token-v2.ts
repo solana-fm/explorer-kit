@@ -7,6 +7,7 @@ import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { mapMultisigAccountKeysToName } from "../../../helpers/multisig-checker";
 import {
   ConfidentialTransferExtensionIDL,
+  ConfidentialTransferFeeExtensionIDL,
   CpiGuardExtensionIDL,
   DefaultAccountStateExtensionIDL,
   InterestBearingMintIDL,
@@ -149,6 +150,28 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
               return {
                 name: ixSerializer.instructionName,
                 data: convertBNToNumberInObject(transferHookData),
+                type: ParserType.INSTRUCTION,
+              };
+            }
+            break;
+
+          // Confidential Transfer FEE Extension Enum
+          case 37:
+            if (dataBuffer.byteLength < 2) {
+              return null;
+            }
+
+            const confidentialTransferFeeData = serializeExtension(
+              ConfidentialTransferFeeExtensionIDL,
+              dataBuffer,
+              mapTypes,
+              accountKeys
+            );
+
+            if (confidentialTransferFeeData) {
+              return {
+                name: ixSerializer.instructionName,
+                data: convertBNToNumberInObject(confidentialTransferFeeData),
                 type: ParserType.INSTRUCTION,
               };
             }
