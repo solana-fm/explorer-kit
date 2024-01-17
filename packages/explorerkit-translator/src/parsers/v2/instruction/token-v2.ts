@@ -15,11 +15,11 @@ import {
   TransferFeeExtensionIDL,
   TransferHookExtensionIDL,
 } from "../../../idls/token-22/extensions";
+import { MetadataPointerExtensionIdl } from "../../../idls/token-22/extensions/metadata-pointer";
 import { InstructionParserInterface } from "../../../interfaces";
 import { IdlItem } from "../../../types/IdlItem";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
 import { serializeTransferFeeExt } from "./token-2022-extensions";
-import { MetadataPointerExtensionIdl } from "../../../idls/token-22/extensions/metadata-pointer";
 
 export type ExtensionTypes = {
   extensionInstructionName: string;
