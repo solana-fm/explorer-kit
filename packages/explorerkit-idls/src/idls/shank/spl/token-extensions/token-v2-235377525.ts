@@ -1278,6 +1278,8 @@ export const Token2022_235377525_IDL: Idl = {
           { name: "TransferHookProgramId" },
           { name: "ConfidentialTransferFeeConfig" },
           { name: "MetadataPointer" },
+          { name: "GroupPointer" },
+          { name: "GroupMemberPointer" },
         ],
       },
     },
@@ -1682,6 +1684,70 @@ export const Token2022_235377525_IDL: Idl = {
               },
             ],
           },
+          {
+            name: "GroupPointer",
+            fields: [
+              {
+                name: "authority",
+                type: "publicKey",
+              },
+              {
+                name: "groupAddress",
+                type: "publicKey",
+              },
+            ],
+          },
+          {
+            name: "TokenGroup",
+            fields: [
+              {
+                name: "updateAuthority",
+                type: "publicKey",
+              },
+              {
+                name: "mint",
+                type: "publicKey",
+              },
+              {
+                name: "size",
+                type: "u32",
+              },
+              {
+                name: "maxSize",
+                type: "u32",
+              },
+            ],
+          },
+          {
+            name: "GroupMemberPointer",
+            fields: [
+              {
+                name: "authority",
+                type: "publicKey",
+              },
+              {
+                name: "memberAddress",
+                type: "publicKey",
+              },
+            ],
+          },
+          {
+            name: "TokenGroupMember",
+            fields: [
+              {
+                name: "mint",
+                type: "publicKey",
+              },
+              {
+                name: "group",
+                type: "publicKey",
+              },
+              {
+                name: "memberNumber",
+                type: "u32",
+              },
+            ],
+          },
         ],
       },
     },
@@ -1711,6 +1777,10 @@ export const Token2022_235377525_IDL: Idl = {
           { name: "ConfidentialTransferFeeAmount" },
           { name: "MetadataPointer" },
           { name: "TokenMetadata" },
+          { name: "GroupPointer" },
+          { name: "TokenGroup" },
+          { name: "GroupMemberPointer" },
+          { name: "TokenGroupMember" },
         ],
       },
     },
