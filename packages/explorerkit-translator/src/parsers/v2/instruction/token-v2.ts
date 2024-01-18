@@ -10,16 +10,19 @@ import {
   ConfidentialTransferFeeExtensionIDL,
   CpiGuardExtensionIDL,
   DefaultAccountStateExtensionIDL,
+  GroupMemberPointerIDL,
+  GroupPointerIDL,
   InterestBearingMintIDL,
   MemoTransferExtensionIDL,
   MetadataPointerExtensionIdl,
+  TokenGroupInterfaceExtensionIDL,
   TokenMetadataInterfaceExtensionIDL,
   TransferFeeExtensionIDL,
   TransferHookExtensionIDL,
 } from "../../../idls/token-22/extensions";
 import { InstructionParserInterface } from "../../../interfaces";
 import { IdlItem } from "../../../types/IdlItem";
-import { KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
+import { FMShankSerializer, KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
 import { serializeTransferFeeExt } from "./token-2022-extensions";
 
@@ -37,6 +40,12 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
     KinobiTreeGeneratorType.INSTRUCTIONS,
     true,
     "spl_token_metadata_interface"
+  );
+
+  const tokenGroupInterfaceLayout = new KinobiTreeGenerator(TokenGroupInterfaceExtensionIDL).constructLayout(
+    KinobiTreeGeneratorType.INSTRUCTIONS,
+    true,
+    "spl_token_group_interface"
   );
 
   const parseInstructions = (instructionData: string, accountKeys?: string[], mapTypes?: boolean): ParserOutput => {
@@ -212,6 +221,40 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
             }
             break;
 
+          // Group Pointer Extension Enum
+          case 40:
+            if (dataBuffer.byteLength < 2) {
+              return null;
+            }
+
+            const groupMemberPointerData = serializeExtension(GroupMemberPointerIDL, dataBuffer, mapTypes, accountKeys);
+
+            if (groupMemberPointerData) {
+              return {
+                name: ixSerializer.instructionName,
+                data: convertBNToNumberInObject(groupMemberPointerData),
+                type: ParserType.INSTRUCTION,
+              };
+            }
+            break;
+
+          // Group Member Pointer Extension Enum
+          case 41:
+            if (dataBuffer.byteLength < 2) {
+              return null;
+            }
+
+            const groupPointerData = serializeExtension(GroupPointerIDL, dataBuffer, mapTypes, accountKeys);
+
+            if (groupPointerData) {
+              return {
+                name: ixSerializer.instructionName,
+                data: convertBNToNumberInObject(groupPointerData),
+                type: ParserType.INSTRUCTION,
+              };
+            }
+            break;
+
           // If there's no nested extensions, it will use the default logic of deserializing the instruction
           // For Token 2022 Program, we will assume that those instructions with more than 1 account keys are usually Multisig Instructions
           default:
@@ -254,9 +297,16 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
         // Slices the first 8 bytes of the instruction data to check for interface discriminants
         const interfaceDiscriminant = Buffer.from(dataBuffer).subarray(0, 8);
         const bs58Discriminant = encodeBase58(interfaceDiscriminant);
-        const interfaceSerializer = tokenMetadataInterfaceLayout.get(bs58Discriminant);
+        let interfaceSerializer: FMShankSerializer | undefined;
 
-        if (interfaceSerializer && dataBuffer.byteLength > 8) {
+        // Iterate through the interface layouts and check if the discriminant matches
+        if (tokenMetadataInterfaceLayout.has(bs58Discriminant) && dataBuffer.byteLength > 8) {
+          interfaceSerializer = tokenMetadataInterfaceLayout.get(bs58Discriminant);
+        } else if (tokenGroupInterfaceLayout.has(bs58Discriminant) && dataBuffer.byteLength > 8) {
+          interfaceSerializer = tokenGroupInterfaceLayout.get(bs58Discriminant);
+        }
+
+        if (interfaceSerializer) {
           const decodedShankData = interfaceSerializer.serializer?.deserialize(dataBuffer.subarray(8));
           if (decodedShankData && decodedShankData[0]) {
             // Will only work for numbered discriminant for now
