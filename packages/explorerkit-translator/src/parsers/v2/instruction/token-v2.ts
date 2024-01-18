@@ -1,6 +1,6 @@
 import { base58 } from "@metaplex-foundation/umi-serializers";
 import { Idl, Idl as ShankIdl } from "@solanafm/kinobi-lite";
-import { convertBNToNumberInObject } from "@solanafm/utils";
+import { convertBNToNumberInObject, encodeBase58 } from "@solanafm/utils";
 
 import { mapDataTypeToName } from "../../../helpers/idl";
 import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
@@ -12,12 +12,14 @@ import {
   DefaultAccountStateExtensionIDL,
   InterestBearingMintIDL,
   MemoTransferExtensionIDL,
+  MetadataPointerExtensionIdl,
+  TokenMetadataInterfaceExtensionIDL,
   TransferFeeExtensionIDL,
   TransferHookExtensionIDL,
 } from "../../../idls/token-22/extensions";
-import { MetadataPointerExtensionIdl } from "../../../idls/token-22/extensions/metadata-pointer";
 import { InstructionParserInterface } from "../../../interfaces";
 import { IdlItem } from "../../../types/IdlItem";
+import { KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
 import { serializeTransferFeeExt } from "./token-2022-extensions";
 
@@ -30,12 +32,22 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
   const idl = idlItem.idl as ShankIdl;
   const instructionsLayout = new KinobiTreeGenerator(idl).constructLayout();
 
+  // Interface layouts to create
+  const tokenMetadataInterfaceLayout = new KinobiTreeGenerator(TokenMetadataInterfaceExtensionIDL).constructLayout(
+    KinobiTreeGeneratorType.INSTRUCTIONS,
+    true,
+    "spl_token_metadata_interface"
+  );
+
   const parseInstructions = (instructionData: string, accountKeys?: string[], mapTypes?: boolean): ParserOutput => {
     try {
       const dataBuffer = base58.serialize(instructionData);
       const ixDiscriminant = Buffer.from(dataBuffer).readUint8(0);
+
       const ixSerializer = instructionsLayout.get(ixDiscriminant);
 
+      // Token 2022 has interfaces which uses 8 bytes discriminants to identify the instruction, we will check for the default logic first before
+      // proceeding with interface discriminants
       if (ixSerializer && dataBuffer.byteLength > 0) {
         switch (ixDiscriminant) {
           // Transfer Fee Extension Enum
@@ -237,6 +249,47 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
               };
             }
             break;
+        }
+      } else {
+        // Slices the first 8 bytes of the instruction data to check for interface discriminants
+        const interfaceDiscriminant = Buffer.from(dataBuffer).subarray(0, 8);
+        const bs58Discriminant = encodeBase58(interfaceDiscriminant);
+        const interfaceSerializer = tokenMetadataInterfaceLayout.get(bs58Discriminant);
+
+        if (interfaceSerializer && dataBuffer.byteLength > 8) {
+          const decodedShankData = interfaceSerializer.serializer?.deserialize(dataBuffer.subarray(8));
+          if (decodedShankData && decodedShankData[0]) {
+            // Will only work for numbered discriminant for now
+            // Means no anchor support
+            const filteredIdlInstruction = idl.instructions?.filter(
+              (instruction) => instruction.discriminant?.value === ixDiscriminant
+            );
+
+            if (mapTypes) {
+              decodedShankData[0] = mapDataTypeToName(
+                decodedShankData[0],
+                filteredIdlInstruction[0]?.args,
+                filteredIdlInstruction[0]?.discriminant
+              );
+            }
+
+            if (filteredIdlInstruction.length > 0) {
+              const instructionAccounts = filteredIdlInstruction[0]?.accounts;
+              const mappedAccountKeys = mapMultisigAccountKeysToName(accountKeys, instructionAccounts);
+
+              return {
+                name: interfaceSerializer.instructionName,
+                data: { ...convertBNToNumberInObject(decodedShankData[0]), ...mappedAccountKeys },
+                type: ParserType.INSTRUCTION,
+              };
+            }
+
+            return {
+              name: interfaceSerializer.instructionName,
+              data: convertBNToNumberInObject(decodedShankData[0]),
+              type: ParserType.INSTRUCTION,
+            };
+          }
         }
       }
 
