@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "concurrently \"tsup src/index.ts --format esm,cjs --dts --watch\" \"node dist/index.js\"",
+    "dev": "concurrently \"tsup src/index.ts --format esm,cjs --dts --watch\" \"node dist/index.mjs\"",
     "serve": "nodemon dist/index.js",
     "test": "vitest run",
     "clean": "rimraf .turbo && rimraf node_modules && rimraf dist",
