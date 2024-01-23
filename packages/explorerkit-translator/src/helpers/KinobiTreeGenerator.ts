@@ -28,8 +28,8 @@ import {
   u128,
   unit,
 } from "@metaplex-foundation/umi/serializers";
+import { splDiscriminate } from "@solana/spl-type-length-value";
 import {
-  assertStringTypeNode,
   assertStructFieldTypeNode,
   bytesTypeNode,
   createFromIdls,
@@ -50,6 +50,8 @@ import {
   TransformNodesVisitor,
   TypeNode,
 } from "@solanafm/kinobi-lite";
+import { encodeBase58 } from "@solanafm/utils";
+import { snakeCase } from "change-case";
 
 import { FMShankSerializer, KinobiTreeGeneratorType, ShankSerializer } from "../types/KinobiTreeGenerator";
 
@@ -142,14 +144,24 @@ export class KinobiTreeGenerator {
 
   /**
    * Constructs a map with the discriminant as the key and the serializer as the value for a single shank-generated IDL
+   * @param treeGeneratorType - The type of tree generator to construct
+   * @param interfaceDiscriminantMode - Uses 8-bytes discriminant for the map key name if true, otherwise uses the discriminant value from the IDL
+   * @param interfacePrefixString - String to prefix the interface name with
+   * @returns A map with the discriminant as the key and the serializer as the value
    */
   public constructLayout(
-    treeGeneratorType: KinobiTreeGeneratorType = KinobiTreeGeneratorType.INSTRUCTIONS
+    treeGeneratorType: KinobiTreeGeneratorType = KinobiTreeGeneratorType.INSTRUCTIONS,
+    interfaceDiscriminantMode: boolean = false,
+    interfacePrefixString?: string
   ): Map<number | string, FMShankSerializer> {
-    return this._constructLayout(treeGeneratorType);
+    return this._constructLayout(treeGeneratorType, interfaceDiscriminantMode, interfacePrefixString);
   }
 
-  private _constructLayout(treeGeneratorType: KinobiTreeGeneratorType): Map<number | string, FMShankSerializer> {
+  private _constructLayout(
+    treeGeneratorType: KinobiTreeGeneratorType,
+    interfaceDiscriminantMode: boolean,
+    interfacePrefixString?: string
+  ): Map<number | string, FMShankSerializer> {
     const typeNodes = getAllDefinedTypes(this.rootNode);
 
     switch (treeGeneratorType) {
@@ -182,6 +194,7 @@ export class KinobiTreeGenerator {
 
               // If there's no discriminant, we will still want to try to create the layout
               if (!ixDiscriminant) {
+                // TODO: Would merge 8-bytes discriminants in the future when we fully merge A`nchor with ExplorerKit.
                 const serializer = KinobiTreeGenerator.createSerializer(
                   instructionNode.dataArgs.struct,
                   typeNodes,
@@ -193,7 +206,14 @@ export class KinobiTreeGenerator {
                   instructionName: serializer[0],
                 };
 
-                instructionLayout.set(index, fmShankSerializer);
+                if (interfaceDiscriminantMode) {
+                  // Will convert to snake case for now since all the discriminators are made from snake-cases
+                  const ixName = snakeCase(instructionNode.name);
+                  const discriminant = splDiscriminate(`${interfacePrefixString ?? ""}:${ixName}`);
+                  instructionLayout.set(encodeBase58(discriminant), fmShankSerializer);
+                } else {
+                  instructionLayout.set(index, fmShankSerializer);
+                }
               }
               // !For anchor in the future
               // if (metadataValue?.__kind === "list") {

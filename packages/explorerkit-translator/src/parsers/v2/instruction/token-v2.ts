@@ -1,20 +1,28 @@
 import { base58 } from "@metaplex-foundation/umi-serializers";
 import { Idl, Idl as ShankIdl } from "@solanafm/kinobi-lite";
-import { convertBNToNumberInObject } from "@solanafm/utils";
+import { convertBNToNumberInObject, encodeBase58 } from "@solanafm/utils";
 
 import { mapDataTypeToName } from "../../../helpers/idl";
 import { KinobiTreeGenerator } from "../../../helpers/KinobiTreeGenerator";
 import { mapMultisigAccountKeysToName } from "../../../helpers/multisig-checker";
 import {
   ConfidentialTransferExtensionIDL,
+  ConfidentialTransferFeeExtensionIDL,
   CpiGuardExtensionIDL,
   DefaultAccountStateExtensionIDL,
+  GroupMemberPointerIDL,
+  GroupPointerIDL,
   InterestBearingMintIDL,
   MemoTransferExtensionIDL,
+  MetadataPointerExtensionIdl,
+  TokenGroupInterfaceExtensionIDL,
+  TokenMetadataInterfaceExtensionIDL,
   TransferFeeExtensionIDL,
+  TransferHookExtensionIDL,
 } from "../../../idls/token-22/extensions";
 import { InstructionParserInterface } from "../../../interfaces";
 import { IdlItem } from "../../../types/IdlItem";
+import { FMShankSerializer, KinobiTreeGeneratorType } from "../../../types/KinobiTreeGenerator";
 import { ParserOutput, ParserType } from "../../../types/Parsers";
 import { serializeTransferFeeExt } from "./token-2022-extensions";
 
@@ -27,12 +35,28 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
   const idl = idlItem.idl as ShankIdl;
   const instructionsLayout = new KinobiTreeGenerator(idl).constructLayout();
 
+  // Interface layouts to create
+  const tokenMetadataInterfaceLayout = new KinobiTreeGenerator(TokenMetadataInterfaceExtensionIDL).constructLayout(
+    KinobiTreeGeneratorType.INSTRUCTIONS,
+    true,
+    "spl_token_metadata_interface"
+  );
+
+  const tokenGroupInterfaceLayout = new KinobiTreeGenerator(TokenGroupInterfaceExtensionIDL).constructLayout(
+    KinobiTreeGeneratorType.INSTRUCTIONS,
+    true,
+    "spl_token_group_interface"
+  );
+
   const parseInstructions = (instructionData: string, accountKeys?: string[], mapTypes?: boolean): ParserOutput => {
     try {
       const dataBuffer = base58.serialize(instructionData);
       const ixDiscriminant = Buffer.from(dataBuffer).readUint8(0);
+
       const ixSerializer = instructionsLayout.get(ixDiscriminant);
 
+      // Token 2022 has interfaces which uses 8 bytes discriminants to identify the instruction, we will check for the default logic first before
+      // proceeding with interface discriminants
       if (ixSerializer && dataBuffer.byteLength > 0) {
         switch (ixDiscriminant) {
           // Transfer Fee Extension Enum
@@ -136,6 +160,101 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
             }
             break;
 
+          // Transfer Hook Extension Enum
+          case 36:
+            if (dataBuffer.byteLength < 2) {
+              return null;
+            }
+
+            const transferHookData = serializeExtension(TransferHookExtensionIDL, dataBuffer, mapTypes, accountKeys);
+
+            if (transferHookData) {
+              return {
+                name: ixSerializer.instructionName,
+                data: convertBNToNumberInObject(transferHookData),
+                type: ParserType.INSTRUCTION,
+              };
+            }
+            break;
+
+          // Confidential Transfer FEE Extension Enum
+          case 37:
+            if (dataBuffer.byteLength < 2) {
+              return null;
+            }
+
+            const confidentialTransferFeeData = serializeExtension(
+              ConfidentialTransferFeeExtensionIDL,
+              dataBuffer,
+              mapTypes,
+              accountKeys
+            );
+
+            if (confidentialTransferFeeData) {
+              return {
+                name: ixSerializer.instructionName,
+                data: convertBNToNumberInObject(confidentialTransferFeeData),
+                type: ParserType.INSTRUCTION,
+              };
+            }
+            break;
+
+          // Metadata Pointer Extension Enum
+          case 39:
+            if (dataBuffer.byteLength < 2) {
+              return null;
+            }
+
+            const metadataPointerData = serializeExtension(
+              MetadataPointerExtensionIdl,
+              dataBuffer,
+              mapTypes,
+              accountKeys
+            );
+
+            if (metadataPointerData) {
+              return {
+                name: ixSerializer.instructionName,
+                data: convertBNToNumberInObject(metadataPointerData),
+                type: ParserType.INSTRUCTION,
+              };
+            }
+            break;
+
+          // Group Pointer Extension Enum
+          case 40:
+            if (dataBuffer.byteLength < 2) {
+              return null;
+            }
+
+            const groupMemberPointerData = serializeExtension(GroupMemberPointerIDL, dataBuffer, mapTypes, accountKeys);
+
+            if (groupMemberPointerData) {
+              return {
+                name: ixSerializer.instructionName,
+                data: convertBNToNumberInObject(groupMemberPointerData),
+                type: ParserType.INSTRUCTION,
+              };
+            }
+            break;
+
+          // Group Member Pointer Extension Enum
+          case 41:
+            if (dataBuffer.byteLength < 2) {
+              return null;
+            }
+
+            const groupPointerData = serializeExtension(GroupPointerIDL, dataBuffer, mapTypes, accountKeys);
+
+            if (groupPointerData) {
+              return {
+                name: ixSerializer.instructionName,
+                data: convertBNToNumberInObject(groupPointerData),
+                type: ParserType.INSTRUCTION,
+              };
+            }
+            break;
+
           // If there's no nested extensions, it will use the default logic of deserializing the instruction
           // For Token 2022 Program, we will assume that those instructions with more than 1 account keys are usually Multisig Instructions
           default:
@@ -173,6 +292,54 @@ export const createTokenV2Ix: (idlItem: IdlItem) => InstructionParserInterface =
               };
             }
             break;
+        }
+      } else {
+        // Slices the first 8 bytes of the instruction data to check for interface discriminants
+        const interfaceDiscriminant = Buffer.from(dataBuffer).subarray(0, 8);
+        const bs58Discriminant = encodeBase58(interfaceDiscriminant);
+        let interfaceSerializer: FMShankSerializer | undefined;
+
+        // Iterate through the interface layouts and check if the discriminant matches
+        if (tokenMetadataInterfaceLayout.has(bs58Discriminant) && dataBuffer.byteLength > 8) {
+          interfaceSerializer = tokenMetadataInterfaceLayout.get(bs58Discriminant);
+        } else if (tokenGroupInterfaceLayout.has(bs58Discriminant) && dataBuffer.byteLength > 8) {
+          interfaceSerializer = tokenGroupInterfaceLayout.get(bs58Discriminant);
+        }
+
+        if (interfaceSerializer) {
+          const decodedShankData = interfaceSerializer.serializer?.deserialize(dataBuffer.subarray(8));
+          if (decodedShankData && decodedShankData[0]) {
+            // Will only work for numbered discriminant for now
+            // Means no anchor support
+            const filteredIdlInstruction = idl.instructions?.filter(
+              (instruction) => instruction.discriminant?.value === ixDiscriminant
+            );
+
+            if (mapTypes) {
+              decodedShankData[0] = mapDataTypeToName(
+                decodedShankData[0],
+                filteredIdlInstruction[0]?.args,
+                filteredIdlInstruction[0]?.discriminant
+              );
+            }
+
+            if (filteredIdlInstruction.length > 0) {
+              const instructionAccounts = filteredIdlInstruction[0]?.accounts;
+              const mappedAccountKeys = mapMultisigAccountKeysToName(accountKeys, instructionAccounts);
+
+              return {
+                name: interfaceSerializer.instructionName,
+                data: { ...convertBNToNumberInObject(decodedShankData[0]), ...mappedAccountKeys },
+                type: ParserType.INSTRUCTION,
+              };
+            }
+
+            return {
+              name: interfaceSerializer.instructionName,
+              data: convertBNToNumberInObject(decodedShankData[0]),
+              type: ParserType.INSTRUCTION,
+            };
+          }
         }
       }
 

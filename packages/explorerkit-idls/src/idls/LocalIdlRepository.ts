@@ -22,6 +22,7 @@ import {
   StakeIDL,
   StakePoolIDL,
   SystemIDL,
+  Token2022_235377525_IDL,
   Token2022IDL,
   TokenIDL,
   VoteIDL,
@@ -63,7 +64,13 @@ export const IdlRepository = new Map<string, Map<number, IdlTypes> | null>([
   ],
   ["BPFLoaderUpgradeab1e11111111111111111111111", new Map([[0, BPFLoaderUpgradeableIDL]])],
   ["TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", new Map([[0, TokenIDL]])],
-  ["TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb", new Map([[0, Token2022IDL]])],
+  [
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    new Map([
+      [220601744, Token2022IDL],
+      [235377525, Token2022_235377525_IDL],
+    ]),
+  ],
   ["namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX", new Map([[0, NameServiceIDL]])],
   ["SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy", new Map([[0, StakePoolIDL]])],
   ["ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL", new Map([[0, AssociatedTokenIDL]])],

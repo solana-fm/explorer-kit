@@ -678,3 +678,32 @@ describe("Parse Transfer Fee Extensions Instructions", () => {
     }
   });
 });
+
+describe("Parse Token Metadata Interface Instructions", () => {
+  it("should parse Initialize Token Metadata Instruction", () => {
+    if (token2022Parser) {
+      const accounts = [
+        "Wy6KMLpjScEkh7TqvXiU9n56RU7YY5x9xnCPSnoMTUP",
+        "GY2JkeezT1j9B8Uh2YGPMXvFzgc4anNyEb9f2yR6xXeB",
+        "Wy6KMLpjScEkh7TqvXiU9n56RU7YY5x9xnCPSnoMTUP",
+        "GY2JkeezT1j9B8Uh2YGPMXvFzgc4anNyEb9f2yR6xXeB",
+      ];
+      // 5FuE1VPjbPztLWeMbtNkcpgTEgmiuoLWYqJQK5UawUXLTFGM1ihtD79gnghdFVg6yr2BL5Ey88rLWMBZtRHRrtKT
+      const data =
+        "qzvJyWvsgjuZzV5s48dRpbdEPXzqG85j8rXTjEkXZXY5YT7YJyfs7oEp726uTT4nraxYxGZRX39NCBXRwzTRQPUokcgNt11Etf1N4J256cCaHkTZ66xz2MwvS6WneVj";
+
+      const decodedData = token2022Parser.parseInstructions(data, accounts, true);
+      expect(decodedData).not.toBeNull();
+      expect(decodedData).not.toBeUndefined();
+      expect(decodedData).toEqual({
+        name: "initializeAccount",
+        data: {
+          name: "doodoo1",
+          symbol: "DOO",
+          uri: "https://prod-sujiko.s3.eu-north-1.amazonaws.com/assets/978.json",
+        },
+        type: "instruction",
+      });
+    }
+  });
+});
