@@ -1,5 +1,11 @@
 # @solanafm/explorer-kit
 
+## 1.0.4
+
+### Patch Changes
+
+- f18f2f3: feat: token extensions full supoprt till v1
+
 ## 1.0.3
 
 ### Patch Changes
