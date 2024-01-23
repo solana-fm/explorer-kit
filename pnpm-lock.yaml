@@ -149,8 +149,8 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0
       '@solanafm/utils':
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.0.4
+        version: 1.0.4
       change-case:
         specifier: ^5.4.2
         version: 5.4.2
@@ -979,8 +979,8 @@ packages:
       chalk: 4.1.2
     dev: false
 
-  /@solanafm/utils@1.0.1:
-    resolution: {integrity: sha512-Cap9pcyM5dmHZsKeZJICFaJoRYOuSxkWJJKS1WmD167GlA3SoAzjtjGYGbGJnSgb4xq4psmA67Nj6DuoMyhB1w==}
+  /@solanafm/utils@1.0.4:
+    resolution: {integrity: sha512-5+a0FLlxbgWRwmJYzYzdZnzSkc6aV2zBiqpdlr/dc7gqnFO8sdJ7KykyDf+LDaEHVIw07aSr/M/rpiZcEM7dnA==}
     dependencies:
       '@metaplex-foundation/umi-options': 0.8.9
       bn.js: 5.2.1

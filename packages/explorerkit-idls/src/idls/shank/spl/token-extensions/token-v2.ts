@@ -1355,14 +1355,12 @@ export const Token2022IDL: Idl = {
               },
               {
                 name: "authority",
-                // Suppose to be a COption of PublicKey but unsure on whether it really has a COption
                 type: "publicKey",
               },
               {
                 name: "autoApproveNewAccounts",
                 type: "bool",
               },
-              // Suppose to be a COption of PublicKey but unsure on whether it really has a COption
               {
                 name: "auditorElgamalPubkey",
                 type: "publicKey",

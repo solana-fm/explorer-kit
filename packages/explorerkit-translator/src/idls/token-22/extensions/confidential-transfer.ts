@@ -425,10 +425,7 @@ export const ConfidentialTransferExtensionIDL: Idl = {
         fields: [
           {
             name: "authority",
-            type: {
-              coption: "publicKey",
-              prefix: "u8",
-            },
+            type: "publicKey",
           },
           {
             name: "auto_approve_new_accounts",
