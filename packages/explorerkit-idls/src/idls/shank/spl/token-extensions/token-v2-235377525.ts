@@ -1686,6 +1686,10 @@ export const Token2022_235377525_IDL: Idl = {
             name: "GroupPointer",
             fields: [
               {
+                name: "extensionLength",
+                type: "u16",
+              },
+              {
                 name: "authority",
                 type: "publicKey",
               },
@@ -1698,6 +1702,10 @@ export const Token2022_235377525_IDL: Idl = {
           {
             name: "TokenGroup",
             fields: [
+              {
+                name: "extensionLength",
+                type: "u16",
+              },
               {
                 name: "updateAuthority",
                 type: "publicKey",
@@ -1720,6 +1728,10 @@ export const Token2022_235377525_IDL: Idl = {
             name: "GroupMemberPointer",
             fields: [
               {
+                name: "extensionLength",
+                type: "u16",
+              },
+              {
                 name: "authority",
                 type: "publicKey",
               },
@@ -1732,6 +1744,10 @@ export const Token2022_235377525_IDL: Idl = {
           {
             name: "TokenGroupMember",
             fields: [
+              {
+                name: "extensionLength",
+                type: "u16",
+              },
               {
                 name: "mint",
                 type: "publicKey",
