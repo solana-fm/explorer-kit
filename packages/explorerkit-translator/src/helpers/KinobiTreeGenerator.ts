@@ -51,9 +51,9 @@ import {
   TypeNode,
 } from "@solanafm/kinobi-lite";
 import { encodeBase58 } from "@solanafm/utils";
-import { snakeCase } from "change-case";
 
 import { FMShankSerializer, KinobiTreeGeneratorType, ShankSerializer } from "../types/KinobiTreeGenerator";
+import { toSnakeCase } from "./common";
 
 export class KinobiTreeGenerator {
   public rootNode: RootNode;
@@ -208,7 +208,7 @@ export class KinobiTreeGenerator {
 
                 if (interfaceDiscriminantMode) {
                   // Will convert to snake case for now since all the discriminators are made from snake-cases
-                  const ixName = snakeCase(instructionNode.name);
+                  const ixName = toSnakeCase(instructionNode.name);
                   const discriminant = splDiscriminate(`${interfacePrefixString ?? ""}:${ixName}`);
                   instructionLayout.set(encodeBase58(discriminant), fmShankSerializer);
                 } else {
