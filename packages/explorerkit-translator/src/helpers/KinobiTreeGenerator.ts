@@ -27,7 +27,7 @@ import {
   u64,
   u128,
   unit,
-} from "@metaplex-foundation/umi/serializers";
+} from "@metaplex-foundation/umi-serializers";
 import { splDiscriminate } from "@solana/spl-type-length-value";
 import {
   assertStructFieldTypeNode,
