@@ -24,7 +24,12 @@
     "lint:fix": "TIMING=1 eslint \"src/**/*.ts*\" --fix",
     "publish-package": "pnpm build && npm publish --access=public"
   },
-  "keywords": [],
+  "keywords": [
+    "solana",
+    "web3",
+    "parser",
+    "data-parser"
+  ],
   "author": "SolanaFM",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
@@ -33,6 +38,12 @@
     "eslint-config-explorerkit": "workspace:*",
     "tsconfig": "workspace:*",
     "vitest": "^0.34.2"
+  },
+  "homepage": "https://github.com/solana-fm/explorer-kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solana-fm/explorer-kit.git",
+    "directory": "packages/explorerkit-translator"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.28.1-beta.2",
