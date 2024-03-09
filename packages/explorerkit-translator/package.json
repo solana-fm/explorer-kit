@@ -40,7 +40,6 @@
     "@metaplex-foundation/umi-serializers": "^0.8.5",
     "@solana/spl-type-length-value": "^0.1.0",
     "@solanafm/kinobi-lite": "^0.12.0",
-    "@solanafm/utils": "^1.0.5",
-    "change-case": "^5.4.2"
+    "@solanafm/utils": "^1.0.5"
   }
 }
