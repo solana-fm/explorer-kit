@@ -1,5 +1,14 @@
 # @solanafm/explorer-kit
 
+## 1.0.5
+
+### Patch Changes
+
+- 4cfc0ab: release: 1.0.5
+
+  - build: upgrade @solana-fm/utils to 1.0.5
+  - fix: remove snakeCase package to ensure CJS can be built
+
 ## 1.0.4
 
 ### Patch Changes
