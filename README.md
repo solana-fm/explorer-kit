@@ -75,7 +75,7 @@ const historicalSFMIdlItem = await getProgramIdl(programId, {
 Parsing a transaction:
 
 ```ts
-import { SolanaFMParser. checkIfInstructionParser, ParserType } from "@solanafm/explorer-kit"
+import { SolanaFMParser, checkIfInstructionParser, ParserType } from "@solanafm/explorer-kit"
 import { getProgramIdl } from "@solanafm/explorer-kit-idls";
 
 const programId = "PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY";
@@ -91,11 +91,11 @@ const ixData = "1AMTAauCh9UPEJKKd6LnGGtWqFvRs2aUZkv9r6wNe3PTzB1KS9TbwYzM8Cp7vUSD
 // Checks if SFMIdlItem is defined, if not you will not be able to initialize the parser layout
 if (SFMIdlItem) {
     const parser = new SolanaFMParser(SFMIdlItem, programId);
-    const instructionParser = instructionParser.createParser(ParserType.INSTRUCTION);
+    const instructionParser = parser.createParser(ParserType.INSTRUCTION);
 
     if (instructionParser && checkIfInstructionParser(instructionParser)) {
         // Parse the transaction
-        const decodedData = parser.parseInstructions(ixData);
+        const decodedData = instructionParser.parseInstructions(ixData);
     }
 }
 ```
