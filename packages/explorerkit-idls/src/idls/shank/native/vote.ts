@@ -84,6 +84,79 @@ export const VoteIDL: Idl = {
         ],
       },
     },
+    {
+      name: "VoteStateWithLatency",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "node_pubkey",
+            type: "publicKey",
+          },
+          {
+            name: "authorized_withdrawer",
+            type: "publicKey",
+          },
+          {
+            name: "commission",
+            type: "u8",
+          },
+          {
+            name: "votes",
+            type: {
+              vec: {
+                defined: "LandedVote",
+              },
+              size: "u64",
+            },
+          },
+          {
+            name: "root_slot",
+            type: {
+              option: "u64",
+            },
+          },
+          {
+            name: "authorized_voters",
+            type: {
+              bTreeMap: ["u64", "publicKey"],
+              size: "u64",
+            },
+          },
+          {
+            name: "prior_voters",
+            type: {
+              defined: "PriorVoters",
+            },
+          },
+          {
+            name: "epoch_credits",
+            type: {
+              vec: {
+                tuple: [
+                  {
+                    defined: "Epoch",
+                  },
+                  {
+                    defined: "Credits",
+                  },
+                  {
+                    defined: "PrevCredits",
+                  },
+                ],
+              },
+              size: "u64",
+            },
+          },
+          {
+            name: "last_timestamp",
+            type: {
+              defined: "BlockTimestamp",
+            },
+          },
+        ],
+      },
+    },
   ],
   instructions: [
     {
@@ -824,6 +897,24 @@ export const VoteIDL: Idl = {
           {
             name: "timestamp",
             type: "i64",
+          },
+        ],
+      },
+    },
+    {
+      name: "LandedVote",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "latency",
+            type: "u8",
+          },
+          {
+            name: "lockout",
+            type: {
+              defined: "Lockout",
+            },
           },
         ],
       },
