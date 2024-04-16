@@ -46,7 +46,8 @@
     "directory": "packages/explorerkit-translator"
   },
   "dependencies": {
-    "@coral-xyz/anchor": "^0.28.1-beta.2",
+    "@coral-xyz/anchor": "^0.29.0",
+    "@coral-xyz/anchor-new": "npm:@coral-xyz/anchor@^0.30.0",
     "@metaplex-foundation/umi": "^0.8.6",
     "@metaplex-foundation/umi-serializers": "^0.8.5",
     "@solana/spl-type-length-value": "^0.1.0",
