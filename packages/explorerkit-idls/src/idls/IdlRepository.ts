@@ -53,10 +53,8 @@ export const checkIdlIsAnchor = (idl: AnchorIdl | AnchorV1Idl | ShankIdl | strin
 export const checkIdlIsAnchorV1 = (idl: AnchorIdl | AnchorV1Idl | ShankIdl | string): idl is AnchorV1Idl => {
   const anchorIdl = idl as AnchorV1Idl;
   // you can differentiate IDLs from their `idl.metadata.spec` field (legacy/old if non-existent)
-  if (anchorIdl.metadata !== undefined && !anchorIdl.metadata.spec) return false;
-  if (anchorIdl.instructions !== undefined) return true;
-
-  return false;
+  if (anchorIdl.metadata && anchorIdl.metadata.spec) return true;
+  else return false;
 };
 
 /**
