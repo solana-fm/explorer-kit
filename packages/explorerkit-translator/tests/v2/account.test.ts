@@ -331,3 +331,53 @@ describe("parseMetadataAccSerializer", () => {
     }
   });
 });
+
+describe("parseAnchorNewAccount", () => {
+  it("should construct an anchor 0.3.0 and above account parser for a given valid IDL", async () => {
+    const programId = "wns1gDLt8fgLcGhWi5MqAqgXpwEP1JftKE9eZnXS1HM";
+    const idlItem = await getProgramIdl(programId);
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const accountParser = parser.createParser(ParserType.ACCOUNT);
+
+      expect(accountParser).not.toBeNull();
+    }
+  });
+
+  it("should construct an anchor 0.3.0 account parser for a given valid IDL and parses the account data", async () => {
+    const programId = "wns1gDLt8fgLcGhWi5MqAqgXpwEP1JftKE9eZnXS1HM";
+    const accountData =
+      "EdAyrR5/9V6m/C2k1mM8GIzYQBK00KUbfbT0m8ZLMx5rl1gIaBAJ7mEJARTO19QY9j6iHHhYBvD1stUbOdk6m9gJOh9S+6WObBMAAA==";
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const accountParser = parser.createParser(ParserType.ACCOUNT);
+      if (accountParser && checkIfAccountParser(accountParser)) {
+        const decodedData = accountParser.parseAccount(accountData, false);
+        expect(decodedData).not.toBeNull();
+        expect(decodedData?.type).toBe("account");
+        expect(decodedData?.name).toBe("TokenGroupMember");
+      }
+    }
+  });
+
+  it("should construct an anchor 0.3.0 account parser for a given valid IDL, parses the account data and map the data that's being returned with the valid idl", async () => {
+    const programId = "wns1gDLt8fgLcGhWi5MqAqgXpwEP1JftKE9eZnXS1HM";
+    const accountData =
+      "EdAyrR5/9V6m/C2k1mM8GIzYQBK00KUbfbT0m8ZLMx5rl1gIaBAJ7mEJARTO19QY9j6iHHhYBvD1stUbOdk6m9gJOh9S+6WObBMAAA==";
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const accountParser = parser.createParser(ParserType.ACCOUNT);
+      if (accountParser && checkIfAccountParser(accountParser)) {
+        const decodedData = accountParser.parseAccount(accountData, true);
+        expect(decodedData).not.toBeNull();
+        expect(decodedData?.type).toBe("account");
+        expect(decodedData?.name).toBe("TokenGroupMember");
+        expect(decodedData?.data["member_number"].type).toBe("u32");
+      }
+    }
+  });
+});

@@ -1,7 +1,9 @@
 import { BorshInstructionCoder } from "@coral-xyz/anchor";
+import { BorshInstructionCoder as NewBorshInstructionCoder } from "@coral-xyz/anchor-new";
 
 import {
   createAnchorInstructionParser,
+  createAnchorV1InstructionParser,
   createShankInstructionParser,
   createShankIxConfig,
   createShankIxMemo,
@@ -14,7 +16,10 @@ import { IdlItem } from "../types/IdlItem";
 import { FMShankSerializer } from "../types/KinobiTreeGenerator";
 import { ParserOutput } from "../types/Parsers";
 
-export type InstructionParsers = BorshInstructionCoder | Map<number | string, FMShankSerializer>;
+export type InstructionParsers =
+  | BorshInstructionCoder
+  | NewBorshInstructionCoder
+  | Map<number | string, FMShankSerializer>;
 
 export interface InstructionParserInterface {
   instructionsLayout: InstructionParsers;
@@ -26,6 +31,9 @@ export const createInstructionParser = (idlItem: IdlItem, programHash: string) =
   switch (idlItem.idlType) {
     case "anchor":
       return createAnchorInstructionParser(idlItem);
+
+    case "anchorV1":
+      return createAnchorV1InstructionParser(idlItem);
 
     case "shank":
       switch (programHash) {

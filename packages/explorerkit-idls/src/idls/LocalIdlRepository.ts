@@ -1,4 +1,5 @@
 import { Idl as AnchorIdl } from "@coral-xyz/anchor";
+import { Idl as AnchorV1Idl } from "@coral-xyz/anchor-new";
 import { Idl as ShankIdl } from "@solanafm/kinobi-lite";
 
 import {
@@ -42,7 +43,7 @@ import {
   TokenMetadataV1130IDL,
 } from "./shank/others/token-metadata";
 
-export type IdlTypes = ShankIdl | AnchorIdl | string;
+export type IdlTypes = ShankIdl | AnchorIdl | AnchorV1Idl | string;
 
 /**
  * A map of program IDs to a map of slot numbers to IDL types.

@@ -307,3 +307,73 @@ describe("createAnchorParserWithSelfCPILogSupport", () => {
     }
   });
 });
+
+describe("createNewAnchorParser", () => {
+  it("should construct an anchor 0.3.0 instruction parser for a given valid IDL", async () => {
+    const programId = "wns1gDLt8fgLcGhWi5MqAqgXpwEP1JftKE9eZnXS1HM";
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const instructionParser = parser.createParser(ParserType.INSTRUCTION);
+
+      expect(instructionParser).not.toBeNull();
+      expect(checkIfInstructionParser(instructionParser)).toBe(true);
+    }
+  });
+
+  it("should construct an anchor 0.3.0 instruction parser for a given valid IDL and parses the instruction data", async () => {
+    const programId = "wns1gDLt8fgLcGhWi5MqAqgXpwEP1JftKE9eZnXS1HM";
+    const instructionData =
+      "MfvwdoBpZ9LzVC6o3abmYEERuURKfjxUvHv3jZzywDMcr7mMdfdzaXwVZz4cn6wvM3yrQqiFqoFza5Eb1hFEkB8GABGePf3siPiKqifZVQ9SgDBX17rkjpphCXJZW9ExhW2nj41ve8jAq4y59Mftn8SXdRNqhjSPXNG7BXjirdwQFm6inDmyd5pTU7rwvsZNjNPj7qVAthwehw3dUwirS";
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const instructionParser = parser.createParser(ParserType.INSTRUCTION);
+      if (instructionParser && checkIfInstructionParser(instructionParser)) {
+        const decodedData = instructionParser.parseInstructions(instructionData);
+        expect(decodedData).not.toBeNull();
+        expect(decodedData?.type).toBe("instruction");
+        expect(decodedData?.name).toBe("create_mint_account");
+      }
+    }
+  });
+});
+
+describe("createAnchorNewParserWithMappingSupport", () => {
+  it("should construct an anchor 0.3.0 instruction parser for a given valid IDL and parse the instruction data with types properly mapped according to the idl", async () => {
+    const programId = "wns1gDLt8fgLcGhWi5MqAqgXpwEP1JftKE9eZnXS1HM";
+    const instructionData =
+      "MfvwdoBpZ9LzVC6o3abmYEERuURKfjxUvHv3jZzywDMcr7mMdfdzaXwVZz4cn6wvM3yrQqiFqoFza5Eb1hFEkB8GABGePf3siPiKqifZVQ9SgDBX17rkjpphCXJZW9ExhW2nj41ve8jAq4y59Mftn8SXdRNqhjSPXNG7BXjirdwQFm6inDmyd5pTU7rwvsZNjNPj7qVAthwehw3dUwirS";
+
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const instructionParser = parser.createParser(ParserType.INSTRUCTION);
+      if (instructionParser && checkIfInstructionParser(instructionParser)) {
+        const decodedData = instructionParser.parseInstructions(
+          instructionData,
+          [
+            "MA1NqUiWSgJz4VDXjPFfNoDWqBBRpMDnT4vxEnt9qbv",
+            "GUPNsgXoWBpJko1GLvCRL8PUdgNPGjEqN682FpJ9wCTx",
+            "MA1NqUiWSgJz4VDXjPFfNoDWqBBRpMDnT4vxEnt9qbv",
+            "CEqhvcVmvLoGyPkP63BfA3fLZ4DZSe4yzgFxzQrBj6ms",
+            "6gQF7GbwhXBC78NveE7JrqcKzbY1WMrkJ6S9gs3dsamz",
+            "9SUrE3EPBoXVjNywEDHSJKJdxebs8H8sLgEWdueEvnKX",
+            "11111111111111111111111111111111",
+            "SysvarRent111111111111111111111111111111111",
+            "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          ],
+          true
+        );
+        expect(decodedData).not.toBeNull();
+        expect(decodedData?.type).toBe("instruction");
+        expect(decodedData?.name).toBe("create_mint_account");
+        expect(decodedData?.data.args.data.name).toBe("Burger #4971");
+      }
+    }
+  });
+});
