@@ -130,6 +130,12 @@ describe("getProgramIdl", () => {
     expect(idl).not.toBeNull();
     expect(idl?.idlType).toBe("anchor");
   });
+
+  it("should return a anchor 0.3.0 idl from the cloud repository", async () => {
+    const idl = await getProgramIdl("wns1gDLt8fgLcGhWi5MqAqgXpwEP1JftKE9eZnXS1HM");
+    expect(idl).not.toBeNull();
+    expect(idl?.idlType).toBe("anchorV1");
+  });
 });
 
 describe("getMultipleProgramIdls", () => {
