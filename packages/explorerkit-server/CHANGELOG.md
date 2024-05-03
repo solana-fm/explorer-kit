@@ -1,5 +1,13 @@
 # @solanafm/explorer-kit-server
 
+## 1.0.4
+
+### Patch Changes
+
+- Updated dependencies [f666e44]
+  - @solanafm/explorer-kit@1.1.0
+  - @solanafm/explorer-kit-idls@1.1.0
+
 ## 1.0.3
 
 ### Patch Changes
