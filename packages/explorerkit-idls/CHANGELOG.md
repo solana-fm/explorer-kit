@@ -1,5 +1,11 @@
 # @solanafm/explorer-kit-idls
 
+## 1.1.1
+
+### Patch Changes
+
+- 608cbc4: fix: add checkIdlIsAnchorV1 to export"
+
 ## 1.1.0
 
 ### Minor Changes
