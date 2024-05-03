@@ -1,5 +1,11 @@
 # @solanafm/explorer-kit
 
+## 1.1.0
+
+### Minor Changes
+
+- f666e44: feat: add support for anchorV1 idls (0.3.0)
+
 ## 1.0.5
 
 ### Patch Changes
