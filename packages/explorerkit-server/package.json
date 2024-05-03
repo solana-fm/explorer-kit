@@ -1,6 +1,6 @@
 {
   "name": "@solanafm/explorer-kit-server",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Server to decode Solana entities over HTTP API",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
