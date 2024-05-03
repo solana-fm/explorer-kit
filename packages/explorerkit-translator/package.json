@@ -37,7 +37,7 @@
     "@solanafm/explorer-kit-idls": "workspace:*",
     "eslint-config-explorerkit": "workspace:*",
     "tsconfig": "workspace:*",
-    "vitest": "^0.34.2"
+    "vitest": "^1.5.3"
   },
   "homepage": "https://github.com/solana-fm/explorer-kit#readme",
   "repository": {
@@ -46,7 +46,8 @@
     "directory": "packages/explorerkit-translator"
   },
   "dependencies": {
-    "@coral-xyz/anchor": "^0.28.1-beta.2",
+    "@coral-xyz/anchor": "^0.29.0",
+    "@coral-xyz/anchor-new": "npm:@coral-xyz/anchor@^0.30.0",
     "@metaplex-foundation/umi": "^0.8.6",
     "@metaplex-foundation/umi-serializers": "^0.8.5",
     "@solana/spl-type-length-value": "^0.1.0",

@@ -1,4 +1,5 @@
 import { Idl as AnchorIdl } from "@coral-xyz/anchor";
+import { Idl as AnchorV1Idl } from "@coral-xyz/anchor-new";
 import { Idl as ShankIdl } from "@solanafm/kinobi-lite";
 
 /**
@@ -9,9 +10,9 @@ export interface IdlItem {
   /** The program ID of the Solana program. */
   programId: string;
   /** The IDL of the Solana program, which can be an Anchor IDL, Shank IDL, or a string. */
-  idl: AnchorIdl | ShankIdl | string;
+  idl: AnchorIdl | AnchorV1Idl | ShankIdl | string;
   /** The type of IDL used by the Solana program. */
-  idlType: "anchor" | "shank" | "kinobi";
+  idlType: "anchor" | "anchorV1" | "shank" | "kinobi";
   /** The version of the Solana program's IDL slot. */
   idlSlotVersion?: number;
   /** The chain ID of the Solana program. */

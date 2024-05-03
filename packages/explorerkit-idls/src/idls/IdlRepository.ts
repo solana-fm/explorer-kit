@@ -1,4 +1,5 @@
 import { Idl as AnchorIdl } from "@coral-xyz/anchor";
+import { Idl as AnchorV1Idl } from "@coral-xyz/anchor-new";
 import { Idl as ShankIdl } from "@solanafm/kinobi-lite";
 
 import { CHAIN_ID } from "../constants";
@@ -8,8 +9,8 @@ import { getLocalIdl, IdlTypes } from "./LocalIdlRepository";
 
 export interface IdlItem {
   programId: string;
-  idl: AnchorIdl | ShankIdl | string;
-  idlType: "anchor" | "shank" | "kinobi";
+  idl: AnchorIdl | AnchorV1Idl | ShankIdl | string;
+  idlType: "anchor" | "anchorV1" | "shank" | "kinobi";
   idlSlotVersion?: number;
   chainId?: CHAIN_ID;
 }
@@ -21,13 +22,15 @@ export type FetchProgramIdlOptions = {
 
 /**
  * Checks if the given IDL is an Anchor IDL.
- * @param {AnchorIdl | ShankIdl | string} idl - The IDL to check.
+ * @param {AnchorIdl | AnchorV1Idl | ShankIdl | string} idl - The IDL to check.
  * @returns {idl is AnchorIdl} - True if the IDL is an Anchor IDL, false otherwise.
  */
-export const checkIdlIsAnchor = (idl: AnchorIdl | ShankIdl | string): idl is AnchorIdl => {
+export const checkIdlIsAnchor = (idl: AnchorIdl | AnchorV1Idl | ShankIdl | string): idl is AnchorIdl => {
   const anchorIdl = idl as AnchorIdl;
 
   if (anchorIdl.metadata !== undefined && anchorIdl.metadata.origin === "shank") return false;
+  // you can differentiate IDLs from their `idl.metadata.spec` field (legacy/old if non-existent)
+  if (anchorIdl.metadata !== undefined && anchorIdl.metadata.spec) return false;
 
   if (anchorIdl.instructions !== undefined) {
     return anchorIdl.instructions.every((instruction: any) => {
@@ -43,20 +46,32 @@ export const checkIdlIsAnchor = (idl: AnchorIdl | ShankIdl | string): idl is Anc
 };
 
 /**
+ * Checks if the given IDL is an Anchor 0.3.0 IDL.
+ * @param {AnchorIdl | AnchorV1Idl | ShankIdl | string} idl - The IDL to check.
+ * @returns {idl is AnchorIdl} - True if the IDL is an Anchor IDL, false otherwise.
+ */
+export const checkIdlIsAnchorV1 = (idl: AnchorIdl | AnchorV1Idl | ShankIdl | string): idl is AnchorV1Idl => {
+  const anchorIdl = idl as AnchorV1Idl;
+  // you can differentiate IDLs from their `idl.metadata.spec` field (legacy/old if non-existent)
+  if (anchorIdl.metadata && anchorIdl.metadata.spec) return true;
+  else return false;
+};
+
+/**
  * Checks if the given IDL is an Shank IDL.
- * @param {AnchorIdl | ShankIdl | string} idl - The IDL to check.
+ * @param {AnchorIdl | AnchorV1Idl | ShankIdl | string} idl - The IDL to check.
  * @returns {idl is ShankIdl} - True if the IDL is an Shank IDL, false otherwise.
  */
-export const checkIdlIsShank = (idl: AnchorIdl | ShankIdl | string): idl is ShankIdl => {
+export const checkIdlIsShank = (idl: AnchorIdl | AnchorV1Idl | ShankIdl | string): idl is ShankIdl => {
   return (idl as ShankIdl).instructions !== undefined && (idl as ShankIdl).metadata !== undefined;
 };
 
 /**
  * Checks if the given IDL is a string.
- * @param {AnchorIdl | ShankIdl | string} idl - The IDL to check.
+ * @param {AnchorIdl | AnchorV1Idl | ShankIdl | string} idl - The IDL to check.
  * @returns {idl is string} - True if the IDL is a string, false otherwise.
  */
-export const checkIdlIsString = (idl: AnchorIdl | ShankIdl | string): idl is string => {
+export const checkIdlIsString = (idl: AnchorIdl | AnchorV1Idl | ShankIdl | string): idl is string => {
   return typeof idl === "string";
 };
 
@@ -78,28 +93,19 @@ export const getProgramIdl = async (
 ): Promise<IdlItem | null> => {
   const localIdl = getLocalIdl(programHash, options?.slotContext, idlRepoMap);
   if (localIdl.idl) {
-    if (checkIdlIsAnchor(localIdl.idl)) {
+    let idlType: "anchor" | "anchorV1" | "shank" | "kinobi" | null = null;
+
+    if (checkIdlIsAnchor(localIdl.idl)) idlType = "anchor";
+    else if (checkIdlIsAnchorV1(localIdl.idl)) idlType = "anchorV1";
+    else if (checkIdlIsShank(localIdl.idl)) idlType = "shank";
+    else if (checkIdlIsString(localIdl.idl)) idlType = "kinobi";
+
+    if (idlType) {
       return {
         programId: programHash,
         idl: localIdl.idl,
-        idlType: "anchor",
-        idlSlotVersion: localIdl?.slotDeployed,
-        chainId: options?.chainId,
-      };
-    } else if (checkIdlIsShank(localIdl.idl)) {
-      return {
-        programId: programHash,
-        idl: localIdl.idl,
-        idlType: "shank",
-        idlSlotVersion: localIdl?.slotDeployed,
-        chainId: options?.chainId,
-      };
-    } else if (checkIdlIsString(localIdl.idl)) {
-      return {
-        programId: programHash,
-        idl: localIdl.idl,
-        idlType: "kinobi",
-        idlSlotVersion: localIdl?.slotDeployed,
+        idlType: idlType,
+        idlSlotVersion: localIdl.slotDeployed,
         chainId: options?.chainId,
       };
     }
@@ -118,10 +124,15 @@ export const getProgramIdl = async (
       if (idlMetaResponse.idlInformation) {
         if (idlMetaResponse.idlInformation.idl) {
           if (idlMetaResponse.idlInformation.idlType === "anchor") {
+            // Since there is two version of anchor IDLs now, we will check if it's an IDL from version 30 and above
+            // If not, we will assume it's an IDL from version 29 and below
+            let idlType: "anchor" | "anchorV1" = "anchor";
+            if (checkIdlIsAnchorV1(idlMetaResponse.idlInformation.idl)) idlType = "anchorV1";
+
             return {
               programId: idlMetaResponse.programHash,
               idl: idlMetaResponse.idlInformation.idl,
-              idlType: "anchor",
+              idlType: idlType,
               idlSlotVersion: idlMetaResponse.idlInformation.slotDeployed,
               chainId: options?.chainId,
             };

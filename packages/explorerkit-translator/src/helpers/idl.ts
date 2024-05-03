@@ -7,9 +7,10 @@ import {
 } from "@solanafm/kinobi-lite";
 
 import { IdlAccountItem, IdlField, IdlType as AnchorIdlType, isIdlAccounts } from "../types/AnchorTypes";
+import { checkIfIdlDefinedFieldsNamed, IdlDefinedFields, IdlType as AnchorV1IdlType } from "../types/NewAnchorTypes";
 
 export type DataWithMappedType = {
-  type: ShankIdlType | AnchorIdlType;
+  type: ShankIdlType | AnchorIdlType | AnchorV1IdlType;
   data: any;
 };
 
@@ -154,6 +155,43 @@ export const mapDataTypeToName = (
           data: data[keyName],
           type: "Unknown Type" as AnchorIdlType | ShankIdlType,
         };
+      }
+    }
+  });
+
+  return Object.keys(mappedDataType).length > 0 ? mappedDataType : data;
+};
+
+export const mapNewAnchorDataTypeToName = (data: Record<string, any>, idlFields?: IdlDefinedFields) => {
+  const dataKeys = Object.keys(data);
+  const mappedDataType: Record<string, DataWithMappedType> = {};
+  dataKeys.forEach((keyName) => {
+    // TODO: Still need to map the individual types to a "string"
+    // TODO: Key names have to be standarized with camel case since I did not standarize the field naming in the IDL
+    // TODO: All will be camel case like authorityAddress etc etc.
+    if (idlFields && idlFields.length > 0) {
+      if (checkIfIdlDefinedFieldsNamed(idlFields)) {
+        const filteredIdlField = idlFields.find((idlField) => idlField.name === keyName);
+        if (filteredIdlField) {
+          // defined type mapper
+          // TODO: Finish Defined Type Mapper in the future xD
+          // if (typeof filteredIdlField === "object") {
+          //   // Since we already know filteredIdlField is a object type, we can safely cast it to Omit<IdlType, IdlTypeLeaf>
+          //   const idlType: Omit<IdlType, IdlTypeLeaf> = filteredIdlField.type as Omit<IdlType, IdlTypeLeaf>;
+          //   if ("defined" in idlType && idlTypes && idlTypes.length > 0) {
+          //     const idlDefinedType = idlTypes.find((type) => type.name === idlType.defined);
+          //   }
+          // }
+          mappedDataType[keyName] = {
+            type: filteredIdlField.type as AnchorV1IdlType,
+            data: data[keyName],
+          };
+        } else {
+          mappedDataType[keyName] = {
+            data: data[keyName],
+            type: "Unknown Type" as AnchorV1IdlType,
+          };
+        }
       }
     }
   });

@@ -1,7 +1,9 @@
 import { BorshAccountsCoder } from "@coral-xyz/anchor";
+import { BorshAccountsCoder as NewBorshAccountsCoder } from "@coral-xyz/anchor-new";
 
 import {
   createAnchorAccountParser,
+  createAnchorV1AccountParser,
   createShankAccountParser,
   createShankConfigAccount,
   createShankNameServiceAccount,
@@ -15,7 +17,7 @@ import { IdlItem } from "../types/IdlItem";
 import { FMShankSerializer } from "../types/KinobiTreeGenerator";
 import { ParserOutput } from "../types/Parsers";
 
-export type AccountParsers = BorshAccountsCoder | Map<number | string, FMShankSerializer>;
+export type AccountParsers = BorshAccountsCoder | NewBorshAccountsCoder | Map<number | string, FMShankSerializer>;
 
 export interface AccountParserInterface {
   accountLayouts: AccountParsers;
@@ -27,6 +29,9 @@ export const createAccountParser = (idlItem: IdlItem, programHash: string, accou
   switch (idlItem.idlType) {
     case "anchor":
       return createAnchorAccountParser(idlItem);
+
+    case "anchorV1":
+      return createAnchorV1AccountParser(idlItem);
 
     case "shank":
       const localSysvars = [
