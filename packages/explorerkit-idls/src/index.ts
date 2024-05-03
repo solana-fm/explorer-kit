@@ -1,6 +1,7 @@
 export type { IdlItem } from "./idls/IdlRepository";
 export {
   checkIdlIsAnchor,
+  checkIdlIsAnchorV1,
   checkIdlIsShank,
   checkIdlIsString,
   getMultipleProgramIdls,
