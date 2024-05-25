@@ -36,7 +36,7 @@
   "dependencies": {
     "@coral-xyz/anchor": "^0.29.0",
     "@coral-xyz/anchor-new": "npm:@coral-xyz/anchor@^0.30.0",
-    "@solanafm/kinobi-lite": "^0.12.0",
+    "@solanafm/kinobi-lite": "^0.12.3",
     "axios": "^1.3.3"
   }
 }

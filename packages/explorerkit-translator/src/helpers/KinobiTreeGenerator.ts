@@ -38,6 +38,7 @@ import {
   EnumVariantTypeNode,
   getAllAccounts,
   getAllDefinedTypes,
+  getAllEvents,
   getAllInstructions,
   Idl,
   isStructTypeNode,
@@ -322,6 +323,30 @@ export class KinobiTreeGenerator {
 
         return typeLayout;
 
+      case KinobiTreeGeneratorType.EVENTS:
+        const eventNodes = getAllEvents(this.rootNode);
+        const eventsLayout = new Map<string | number, FMShankSerializer>();
+
+        eventNodes.forEach((eventNode, index) => {
+          if (isStructTypeNode(eventNode.dataArgs.struct)) {
+            const serializer = KinobiTreeGenerator.createSerializer(
+              eventNode.dataArgs.struct,
+              typeNodes,
+              eventNode.dataArgs.name,
+              treeGeneratorType
+            );
+            const fmShankSerializer: FMShankSerializer = {
+              serializer: serializer[1],
+              instructionName: serializer[0],
+            };
+
+            // TODO: Will try to strongly take reference from the IDL in the future
+            const eventDiscriminator = index;
+            eventsLayout.set(eventDiscriminator, fmShankSerializer);
+          }
+        });
+
+        return eventsLayout;
       default:
         return new Map();
     }
