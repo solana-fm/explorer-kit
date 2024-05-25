@@ -1,5 +1,11 @@
 # @solanafm/explorer-kit
 
+## 1.1.1
+
+### Patch Changes
+
+- 30f749f: support shank event parsing
+
 ## 1.1.0
 
 ### Minor Changes

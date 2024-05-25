@@ -1,5 +1,11 @@
 # @solanafm/explorer-kit-idls
 
+## 1.1.2
+
+### Patch Changes
+
+- 30f749f: support shank event parsing
+
 ## 1.1.1
 
 ### Patch Changes
