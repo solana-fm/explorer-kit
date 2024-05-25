@@ -1,6 +1,6 @@
 import { BorshEventCoder, BorshInstructionCoder } from "@coral-xyz/anchor";
 
-import { createAnchorEventParser } from "../parsers/v2/event";
+import { createAnchorEventParser, createShankEventParser } from "../parsers/v2/event";
 import { createBubblegumEventParser } from "../parsers/v2/event/anchor/bubblegum";
 import { createSPLCompEventParser } from "../parsers/v2/event/anchor/spl-compression";
 import { createTCompEventParser } from "../parsers/v2/event/anchor/tcomp";
@@ -40,6 +40,12 @@ export const createEventParser = (idlItem: IdlItem, programHash: string) => {
 
         default:
           return null;
+      }
+
+    case "shank":
+      switch (programHash) {
+        default:
+          return createShankEventParser(idlItem);
       }
 
     default:

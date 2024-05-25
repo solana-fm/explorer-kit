@@ -57,8 +57,8 @@ importers:
         specifier: npm:@coral-xyz/anchor@^0.30.0
         version: /@coral-xyz/anchor@0.30.0
       '@solanafm/kinobi-lite':
-        specifier: ^0.12.0
-        version: 0.12.0
+        specifier: ^0.12.2
+        version: 0.12.2
       axios:
         specifier: ^1.3.3
         version: 1.3.3
@@ -152,8 +152,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       '@solanafm/kinobi-lite':
-        specifier: ^0.12.0
-        version: 0.12.0
+        specifier: ^0.12.3
+        version: 0.12.3
       '@solanafm/utils':
         specifier: ^1.0.5
         version: 1.0.5
@@ -226,8 +226,8 @@ packages:
       regenerator-runtime: 0.14.1
     dev: false
 
-  /@babel/runtime@7.24.5:
-    resolution: {integrity: sha512-Nms86NXrsaeU9vbBJKni6gXiEXZ4CVpYVzEjDH9Sb8vmZ3UljyA1GSOJl/6LGPO8EHLuSF9H+IxNXHPX8QHJ4g==}
+  /@babel/runtime@7.24.6:
+    resolution: {integrity: sha512-Ja18XcETdEl5mzzACGd+DKgaGJzPTCow7EglgwTmHdwokzDFYh/MHua6lU6DV/hjF2IaOJ4oX2nqnjG7RElKOw==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
@@ -449,9 +449,9 @@ packages:
     resolution: {integrity: sha512-qreDh5ztiRHVnCbJ+RS70NJ6aSTPBYDAgFeQ7Z5QvaT5DcDIhNyt4onOciVz2ieIE1XWePOJDDu9SbNvPGBkvQ==}
     engines: {node: '>=11'}
     dependencies:
-      '@coral-xyz/borsh': 0.30.0(@solana/web3.js@1.91.7)
+      '@coral-xyz/borsh': 0.30.0(@solana/web3.js@1.91.8)
       '@noble/hashes': 1.4.0
-      '@solana/web3.js': 1.91.7
+      '@solana/web3.js': 1.91.8
       bn.js: 5.2.1
       bs58: 4.0.1
       buffer-layout: 1.2.2
@@ -480,13 +480,13 @@ packages:
       buffer-layout: 1.2.2
     dev: false
 
-  /@coral-xyz/borsh@0.30.0(@solana/web3.js@1.91.7):
+  /@coral-xyz/borsh@0.30.0(@solana/web3.js@1.91.8):
     resolution: {integrity: sha512-OrcV+7N10cChhgDRUxM4iEIuwxUHHs52XD85R8cFCUqE0vbLYrcoPPPs+VF6kZ9DhdJGVW2I6DHJOp5TykyZog==}
     engines: {node: '>=10'}
     peerDependencies:
       '@solana/web3.js': ^1.68.0
     dependencies:
-      '@solana/web3.js': 1.91.7
+      '@solana/web3.js': 1.91.8
       bn.js: 5.2.1
       buffer-layout: 1.2.2
     dev: false
@@ -1358,10 +1358,10 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@solana/web3.js@1.91.7:
-    resolution: {integrity: sha512-HqljZKDwk6Z4TajKRGhGLlRsbGK4S8EY27DA7v1z6yakewiUY3J7ZKDZRxcqz2MYV/ZXRrJ6wnnpiHFkPdv0WA==}
+  /@solana/web3.js@1.91.8:
+    resolution: {integrity: sha512-USa6OS1jbh8zOapRJ/CBZImZ8Xb7AJjROZl5adql9TpOoBN9BUzyyouS5oPuZHft7S7eB8uJPuXWYjMi6BHgOw==}
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.24.6
       '@noble/curves': 1.4.0
       '@noble/hashes': 1.4.0
       '@solana/buffer-layout': 4.0.1
@@ -1374,7 +1374,7 @@ packages:
       fast-stable-stringify: 1.0.0
       jayson: 4.1.0
       node-fetch: 2.7.0
-      rpc-websockets: 7.10.0
+      rpc-websockets: 7.11.0
       superstruct: 0.14.2
     transitivePeerDependencies:
       - bufferutil
@@ -1382,10 +1382,17 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@solanafm/kinobi-lite@0.12.0:
-    resolution: {integrity: sha512-K3daAv8HoJzM6UiDUG1Tj0tZIcCSJENmqx5nw4J2+sOwyZm1leFvVkIHM+WOExh/IqI7PglipRJbrF0OXN007Q==}
+  /@solanafm/kinobi-lite@0.12.2:
+    resolution: {integrity: sha512-87zABN6+nCtC7Vd5QBlYQden5OFqJEKSbDwOS2QZov3CSYScbFDdbEbOdV9BCrJ434fMewEkZsG6u5RgsbwFjQ==}
     dependencies:
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.4.0
+      chalk: 4.1.2
+    dev: false
+
+  /@solanafm/kinobi-lite@0.12.3:
+    resolution: {integrity: sha512-1a5edBWhDSuVRqJw/A3VCDU1W20of4FpEBc/B1/U7KFssxZLwq5A16DYZMMI5bM0hl9etPV0x+cz2m9cOWeVqQ==}
+    dependencies:
+      '@noble/hashes': 1.4.0
       chalk: 4.1.2
     dev: false
 
@@ -4684,6 +4691,17 @@ packages:
       utf-8-validate: 5.0.10
     dev: false
 
+  /rpc-websockets@7.11.0:
+    resolution: {integrity: sha512-IkLYjayPv6Io8C/TdCL5gwgzd1hFz2vmBZrjMw/SPEXo51ETOhnzgS4Qy5GWi2JQN7HKHa66J3+2mv0fgNh/7w==}
+    dependencies:
+      eventemitter3: 4.0.7
+      uuid: 8.3.2
+      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    optionalDependencies:
+      bufferutil: 4.0.8
+      utf-8-validate: 5.0.10
+    dev: false
+
   /rpc-websockets@7.6.1:
     resolution: {integrity: sha512-MmRGaJJvxTHSRxYPjJJqcj2zWnCetw7YbYbKlD0Yc7qVw6PsZhRJg1MI3mpWlpBs+4zO+urlNfLl9zLsdOD/gA==}
     dependencies:
@@ -5895,6 +5913,22 @@ packages:
 
   /ws@8.16.0(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dependencies:
+      bufferutil: 4.0.8
+      utf-8-validate: 5.0.10
+    dev: false
+
+  /ws@8.17.0(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+    resolution: {integrity: sha512-uJq6108EgZMAl20KagGkzCKfMEjxmKvZHG7Tlq0Z6nOky7YF7aq4mOx6xK8TJ/i1LeK4Qus7INktacctDgY8Ow==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1

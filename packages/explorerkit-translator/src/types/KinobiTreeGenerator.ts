@@ -15,4 +15,5 @@ export enum KinobiTreeGeneratorType {
   ACCOUNTS,
   INSTRUCTIONS,
   TYPES,
+  EVENTS,
 }
