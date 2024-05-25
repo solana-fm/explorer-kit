@@ -57,8 +57,8 @@ importers:
         specifier: npm:@coral-xyz/anchor@^0.30.0
         version: /@coral-xyz/anchor@0.30.0
       '@solanafm/kinobi-lite':
-        specifier: ^0.12.2
-        version: 0.12.2
+        specifier: ^0.12.3
+        version: 0.12.3
       axios:
         specifier: ^1.3.3
         version: 1.3.3
@@ -1380,13 +1380,6 @@ packages:
       - bufferutil
       - encoding
       - utf-8-validate
-    dev: false
-
-  /@solanafm/kinobi-lite@0.12.2:
-    resolution: {integrity: sha512-87zABN6+nCtC7Vd5QBlYQden5OFqJEKSbDwOS2QZov3CSYScbFDdbEbOdV9BCrJ434fMewEkZsG6u5RgsbwFjQ==}
-    dependencies:
-      '@noble/hashes': 1.4.0
-      chalk: 4.1.2
     dev: false
 
   /@solanafm/kinobi-lite@0.12.3:
