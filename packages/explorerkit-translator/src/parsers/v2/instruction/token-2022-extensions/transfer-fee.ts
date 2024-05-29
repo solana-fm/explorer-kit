@@ -1,7 +1,7 @@
 import { Idl } from "@solanafm/kinobi-lite";
 import { convertBNToNumberInObject } from "@solanafm/utils";
 
-import { extractIdlIxAccountName, mapDataTypeToName } from "../../../../helpers/idl";
+import { extractIdlIxAccountName, IdlAccountName, mapDataTypeToName } from "../../../../helpers/idl";
 import { KinobiTreeGenerator } from "../../../../helpers/KinobiTreeGenerator";
 import { DataWithMappedType, mapMultisigAccountKeysToName } from "../../../../helpers/multisig-checker";
 import { ExtensionTypes } from "../token-v2";
@@ -19,7 +19,7 @@ export const serializeTransferFeeExt = (
   extensionIDL: Idl,
   dataBuffer: Uint8Array,
   mapTypes?: boolean,
-  accountKeys?: string[]
+  accountKeys?: IdlAccountName[]
 ): ExtensionTypes | null => {
   const extensionSerializerLayout = new KinobiTreeGenerator(extensionIDL).constructLayout();
   const extensionIxDiscriminant = Buffer.from(dataBuffer).readUint8(1);
@@ -71,8 +71,8 @@ export const serializeTransferFeeExt = (
               const numberOfTokenAccounts = decodedShankData[0].numTokenAccounts.data;
               const [tokenMint, destination, authority] = [accountKeys[0], accountKeys[1], accountKeys[2]];
               const sources = accountKeys.splice(-1 * numberOfTokenAccounts);
-              const names: (string | string[])[] = [];
-              let signers: string[] = [];
+              const names: (IdlAccountName | IdlAccountName[])[] = [];
+              let signers: IdlAccountName[] = [];
 
               //   So if account keys still has more than 3 keys, this means that there's more than
               //   1 signers since token account sources has been spliced
@@ -82,16 +82,16 @@ export const serializeTransferFeeExt = (
 
               // Populate the names array with the account names
               instructionAccounts.forEach((idlIxAccount) => {
-                names.push(extractIdlIxAccountName(idlIxAccount) ?? "Unknown");
+                names.push(extractIdlIxAccountName(idlIxAccount) ?? { name: "Unknown" });
               });
 
               // Flatten the names array and create an empty object to store the translated account keys
               // This is flatten due to the fact that there's a possibility of nested arrays such as Zeta Program
               const flattenNames = names.flat(5);
               let toCopy: DataWithMappedType = {
-                [flattenNames[0] as string]: { data: tokenMint ?? accountKeys[0]!, type: "publicKey" },
-                [flattenNames[1] as string]: { data: destination ?? accountKeys[1]!, type: "publicKey" },
-                [flattenNames[2] as string]: { data: authority ?? accountKeys[2]!, type: "publicKey" },
+                [flattenNames[0]?.name as string]: { data: tokenMint ?? accountKeys[0]!, type: "publicKey" },
+                [flattenNames[1]?.name as string]: { data: destination ?? accountKeys[1]!, type: "publicKey" },
+                [flattenNames[2]?.name as string]: { data: authority ?? accountKeys[2]!, type: "publicKey" },
               };
 
               signers.forEach((signerAccountKey, index) => {
