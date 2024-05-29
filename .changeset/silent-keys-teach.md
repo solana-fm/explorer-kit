@@ -2,4 +2,4 @@
 "@solanafm/explorer-kit": patch
 ---
 
-wq
+fix: patch token extensions account key mapping
