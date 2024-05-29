@@ -1,5 +1,12 @@
 # @solanafm/explorer-kit
 
+## 1.1.2
+
+### Patch Changes
+
+- d833b78: feat: add support for optional account keys
+- daa0990: fix: patch token extensions account key mapping
+
 ## 1.1.1
 
 ### Patch Changes
