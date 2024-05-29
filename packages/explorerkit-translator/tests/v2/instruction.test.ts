@@ -230,7 +230,7 @@ describe("createShankParserWithMappingSupport", () => {
   });
 });
 
-describe("createAnchorParserWithOptionalAccountKeysSupport", () => {
+describe("createShankParserWithOptionalAccountKeysSupport", () => {
   it("should construct an shank instruction parser for a given valid IDL and map the correct number of account keys with 1 optional account keys", async () => {
     const programId = "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8";
     const idlItem = await getProgramIdl(programId);
@@ -263,6 +263,7 @@ describe("createAnchorParserWithOptionalAccountKeysSupport", () => {
         expect(decodedData).not.toBeNull();
         expect(decodedData?.name).toBe("swapBaseIn");
         expect(decodedData?.data.ammTargetOrders).toBeUndefined();
+        expect(decodedData?.data.poolCoinTokenAccount).toBe("FBba2XsQVhkoQDMfbNLVmo7dsvssdT39BMzVc2eFfE21");
       }
     }
   });
