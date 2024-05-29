@@ -1,5 +1,11 @@
 # @solanafm/explorer-kit
 
+## 1.1.3
+
+### Patch Changes
+
+- b1ca99f: feat: add support for optional account keys
+
 ## 1.1.2
 
 ### Patch Changes
