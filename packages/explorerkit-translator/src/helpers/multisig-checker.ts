@@ -1,6 +1,6 @@
 import { IdlInstructionAccount, IdlType } from "@solanafm/kinobi-lite";
 
-import { extractIdlIxAccountName } from "./idl";
+import { extractIdlIxAccountName, IdlAccountName } from "./idl";
 
 export type DataWithMappedType = {
   [name: string]: {
@@ -18,16 +18,20 @@ export type DataWithMappedType = {
  * @returns An object containing the mapped account keys and their corresponding names.
  */
 export const mapMultisigAccountKeysToName = (
-  accountKeys?: string[],
+  accountKeys?: IdlAccountName[],
   idlIxAccounts?: IdlInstructionAccount[],
   accountName?: string
 ): DataWithMappedType => {
   if (idlIxAccounts && accountKeys) {
-    const names: (string | string[])[] = [];
+    const names: (IdlAccountName | IdlAccountName[])[] = [];
 
     // Populate the names array with the account names
     idlIxAccounts.forEach((idlIxAccount) => {
-      names.push(extractIdlIxAccountName(idlIxAccount) ?? "Unknown");
+      names.push(
+        extractIdlIxAccountName(idlIxAccount) ?? {
+          name: "Unknown",
+        }
+      );
     });
 
     // Flatten the names array and create an empty object to store the translated account keys
@@ -39,9 +43,11 @@ export const mapMultisigAccountKeysToName = (
     // This means that there's no multisig and it's most probably a Single owner/delegate scenario
     if (flattenNames.length === accountKeys.length) {
       accountKeys.forEach((accountKey, index) => {
-        const objectKey = flattenNames[index] ?? ("Unknown" as string);
+        const objectKey = flattenNames[index] ?? {
+          name: "Unknown",
+        };
         const object: DataWithMappedType = {
-          [objectKey]: { data: accountKey, type: "publicKey" },
+          [objectKey.name]: { data: accountKey, type: "publicKey" },
         };
 
         translatedAccountKeysObj = Object.assign(translatedAccountKeysObj, object);
@@ -59,9 +65,9 @@ export const mapMultisigAccountKeysToName = (
     else {
       const signers = accountKeys.splice(names.length - 1);
       accountKeys.forEach((accountKey, index) => {
-        const objectKey = flattenNames[index] ?? ("Unknown" as string);
+        const objectKey = flattenNames[index] ?? { name: "Unknown" };
         const object: DataWithMappedType = {
-          [objectKey]: { data: accountKey, type: "publicKey" },
+          [objectKey.name]: { data: accountKey, type: "publicKey" },
         };
 
         translatedAccountKeysObj = Object.assign(translatedAccountKeysObj, object);
