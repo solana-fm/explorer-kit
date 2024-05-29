@@ -14,6 +14,11 @@ export type DataWithMappedType = {
   data: any;
 };
 
+export type IdlAccountName = {
+  name: string;
+  optional?: boolean;
+};
+
 export const isDataWithMappedType = (data: any): data is DataWithMappedType => {
   return data.type && data.data;
 };
@@ -26,23 +31,47 @@ export const mapAccountKeysToName = (
   [name: string]: string | DataWithMappedType;
 } => {
   if (idlIxAccounts && accountKeys) {
-    const names: (string | string[])[] = [];
+    const names: (IdlAccountName | IdlAccountName[])[] = [];
 
     idlIxAccounts.forEach((idlIxAccount) => {
-      names.push(extractIdlIxAccountName(idlIxAccount) ?? "Unknown");
+      names.push(
+        extractIdlIxAccountName(idlIxAccount) ?? {
+          name: "Unknown",
+        }
+      );
+    });
+    const flattenedArray = names.flat(5);
+    let nonOptionalAccountKeys = 0;
+    let optionalAccountKeys = 0;
+
+    flattenedArray.forEach((accountKey) => {
+      if (accountKey.optional) optionalAccountKeys++;
+      else nonOptionalAccountKeys++;
     });
 
-    const flattenedArray = names.flat(5);
+    let optionalKeyCounter = 1;
+
     let translatedAccountKeysObj: {
       [name: string]: string;
     } = {};
 
     accountKeys.forEach((accountKey, index) => {
-      const objectKey = flattenedArray[index] ?? ("Unknown" as string);
+      const objectKey = flattenedArray[index] ?? {
+        name: "Unknown",
+      };
+
+      // If the account is optional, we will check if the accountKeys length is more than the idlIxAccounts length without optional accounts
+      if (objectKey.optional) {
+        optionalKeyCounter++;
+        // If the optional key counter is more than the optional account keys, we will return and not add the name
+        if (optionalKeyCounter > optionalAccountKeys) return;
+        if (accountKeys.length > nonOptionalAccountKeys + optionalKeyCounter) return;
+      }
+
       const object: {
         [name: string]: string | DataWithMappedType;
       } = {
-        [objectKey]: mapTypes ? { data: accountKey, type: "publicKey" } : accountKey,
+        [objectKey.name]: mapTypes ? { data: accountKey, type: "publicKey" } : accountKey,
       };
 
       translatedAccountKeysObj = Object.assign(translatedAccountKeysObj, object);
@@ -54,49 +83,12 @@ export const mapAccountKeysToName = (
   return {};
 };
 
-export const mapAccountKeysToNameV2 = (
-  accountKeys?: string[],
-  idlIxAccounts?: IdlAccountItem[] | IdlInstructionAccount[],
-  mapTypes?: boolean
-): {
-  [name: string]: string | DataWithMappedType | (string | DataWithMappedType)[];
-} => {
-  if (!idlIxAccounts || !accountKeys) return {};
-
-  const names: string[] = idlIxAccounts
-    .map((idlIxAccount) => extractIdlIxAccountName(idlIxAccount) ?? "Unknown")
-    .flat();
-  let translatedAccountKeysObj: {
-    [name: string]: string | DataWithMappedType | (string | DataWithMappedType)[];
-  } = {};
-
-  accountKeys.forEach((accountKey, index) => {
-    const objectKey = names[index] ?? "Unknown";
-    const newEntry = mapTypes ? ({ data: accountKey, type: "publicKey" } as DataWithMappedType) : accountKey;
-
-    // If objectKey already exists, we append the new accountKey to the existing array or object
-    if (objectKey in translatedAccountKeysObj) {
-      const existingEntry = translatedAccountKeysObj[objectKey];
-
-      if (Array.isArray(existingEntry)) {
-        (existingEntry as (string | DataWithMappedType)[]).push(newEntry);
-      } else {
-        translatedAccountKeysObj[objectKey] = [existingEntry ?? "", newEntry];
-      }
-    }
-    // If the objectKey doesn't exist in translatedAccountKeysObj, we just assign it like before
-    else {
-      translatedAccountKeysObj[objectKey] = newEntry;
-    }
-  });
-
-  return translatedAccountKeysObj;
-};
-
-export const extractIdlIxAccountName: (IdlAccount?: IdlAccountItem) => string | string[] | undefined = (idlAccount) => {
+export const extractIdlIxAccountName: (IdlAccount?: IdlAccountItem) => IdlAccountName | IdlAccountName[] | undefined = (
+  idlAccount
+) => {
   if (idlAccount) {
     if (isIdlAccounts(idlAccount)) {
-      const idlIxAccounts: string[] = [];
+      const idlIxAccounts: IdlAccountName[] = [];
 
       idlAccount.accounts.forEach((account) => {
         let extractedName = extractIdlIxAccountName(account);
@@ -104,14 +96,20 @@ export const extractIdlIxAccountName: (IdlAccount?: IdlAccountItem) => string | 
           if (Array.isArray(extractedName)) {
             extractedName = extractIdlIxAccountName(account);
           } else {
-            idlIxAccounts.push(idlAccount.name + "." + extractedName);
+            idlIxAccounts.push({
+              name: idlAccount.name + "." + extractedName.name,
+              optional: extractedName.optional,
+            });
           }
         }
       });
 
       return idlIxAccounts;
     } else {
-      return idlAccount.name;
+      return {
+        name: idlAccount.name,
+        optional: idlAccount.isOptional,
+      };
     }
   }
 
