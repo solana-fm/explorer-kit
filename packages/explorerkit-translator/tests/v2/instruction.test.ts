@@ -230,6 +230,44 @@ describe("createShankParserWithMappingSupport", () => {
   });
 });
 
+describe("createAnchorParserWithOptionalAccountKeysSupport", () => {
+  it("should construct an shank instruction parser for a given valid IDL and map the correct number of account keys with 1 optional account keys", async () => {
+    const programId = "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8";
+    const idlItem = await getProgramIdl(programId);
+    const instructionData = "5xcHHuFELpsnhDZW9QA7Vjm";
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const instructionParser = parser.createParser(ParserType.INSTRUCTION);
+
+      if (instructionParser && checkIfInstructionParser(instructionParser)) {
+        const decodedData = instructionParser.parseInstructions(instructionData, [
+          "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "DSUvc5qf5LJHHV5e2tD184ixotSnCnwj7i4jJa4Xsrmt",
+          "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1",
+          "38p42yoKFWgxw2LCbB96wAKa2LwAxiBArY3fc3eA9yWv",
+          "FBba2XsQVhkoQDMfbNLVmo7dsvssdT39BMzVc2eFfE21",
+          "GuXKCb9ibwSeRSdSYqaCL3dcxBZ7jJcj6Y7rDwzmUBu9",
+          "srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX",
+          "58sHobBa2KmyE3EKxCpgxn5KGuzudmGHsgqYgrfciyzd",
+          "EhboNaGqMiw2rqvh7uN6qEsfxpNoCJQBzPbiiSBNCXmW",
+          "CnsZUH9AUNFqkEE6oExCevcHkMamPJhPFvND6mLT4ikb",
+          "33L8Zi2bnkUX99NJeFmSEwYF6DaNknPXTB5EdsVBfb6e",
+          "Cr278bTbmgyvTbnt1jqCTsPdqUaB9WN3hbGMjRFontmM",
+          "EYXT9U31MHRsRSBJ8zafg9paUwYLmWZfJHbSwrJ8mNVb",
+          "B7af1ADihMVF1xE2243G2ggBkLRFTFgHT8hHbjWzqj1F",
+          "CTyFguG69kwYrzk24P3UuBvY1rR5atu9kf2S6XEwAU8X",
+          "F8K1h7dk5UGCv4u6w1b6u6WqtjyJfqHcQvN4DT8eYpM8",
+          "MfDuWeqSHEqTFVYZ7LoexgAK9dxk7cy4DFJWjWMGVWa",
+        ]);
+        expect(decodedData).not.toBeNull();
+        expect(decodedData?.name).toBe("swapBaseIn");
+        expect(decodedData?.data.ammTargetOrders).toBeUndefined();
+      }
+    }
+  });
+});
+
 describe("createShankPhoenixParserWithMappingSupport", () => {
   it("should construct an shank phoenix instruction parser for a given valid IDL and parse the instruction data with types properly mapped according to the idl", async () => {
     const programId = "PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY";
