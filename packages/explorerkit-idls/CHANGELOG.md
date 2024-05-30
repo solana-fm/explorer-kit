@@ -1,5 +1,11 @@
 # @solanafm/explorer-kit-idls
 
+## 1.1.3
+
+### Patch Changes
+
+- 394b2a7: fix: add boolean field to confidential transfer config
+
 ## 1.1.2
 
 ### Patch Changes
