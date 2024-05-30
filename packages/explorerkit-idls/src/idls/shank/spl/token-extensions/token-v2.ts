@@ -1588,6 +1588,10 @@ export const Token2022IDL: Idl = {
                 type: "publicKey",
               },
               {
+                name: "harvestToMintEnabled",
+                type: "bool",
+              },
+              {
                 name: "withheldAmount",
                 type: {
                   array: ["u8", 64],
