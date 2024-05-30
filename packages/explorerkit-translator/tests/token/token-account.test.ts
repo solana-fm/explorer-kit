@@ -69,6 +69,26 @@ describe("parse token-2022 mint account with more than 1 extensions", () => {
       expect(parsedAccountData?.data.accountType.enumType).toBe("mint");
     }
   });
+
+  it("should be able to parse a mint account with more than 1 extensions and has 8 extensions", () => {
+    if (token2022Parser) {
+      const accountData =
+        "AQAAAEWL8jQUbMmHNpVOADdvZA1z7a1jyDebZa3bW4Jv0uMVYHGwOIwEAAAGAQEAAAAXhTJh72q4Uypn8FOGWq0xKT/PB88SCrW5oVcGVI3AKwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQMAIAAXhTJh72q4Uypn8FOGWq0xKT/PB88SCrW5oVcGVI3AKwwAIAAXhTJh72q4Uypn8FOGWq0xKT/PB88SCrW5oVcGVI3AKwEAbAAXhTJh72q4Uypn8FOGWq0xKT/PB88SCrW5oVcGVI3AKxeFMmHvarhTKmfwU4ZarTEpP88HzxIKtbmhVwZUjcArAAAAAAAAAABdAgAAAAAAAAAAAAAAAAAAAABdAgAAAAAAAAAAAAAAAAAAAAAEAEEAF4UyYe9quFMqZ/BThlqtMSk/zwfPEgq1uaFXBlSNwCsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAIEAF4UyYe9quFMqZ/BThlqtMSk/zwfPEgq1uaFXBlSNwCscN+ZDO3ME3YJzeuQNm4vzxJ9bDmxJqNUzKLPlBpAcVwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgBAABeFMmHvarhTKmfwU4ZarTEpP88HzxIKtbmhVwZUjcArAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASAEAAgnQVMyO1m+9u94xUbiBsQYh7lCdtZO+gj0jz14I76NgXkkg7bIoqh7dHHYFPlZH5OVyECpzj2fTVun06S4p0nhMArgCCdBUzI7Wb7273jFRuIGxBiHuUJ21k76CPSPPXgjvo2BeSSDtsiiqHt0cdgU+Vkfk5XIQKnOPZ9NW6fTpLinSeCgAAAFBheVBhbCBVU0QFAAAAUFlVU0RPAAAAaHR0cHM6Ly90b2tlbi1tZXRhZGF0YS5wYXhvcy5jb20vcHl1c2RfbWV0YWRhdGEvcHJvZC9zb2xhbmEvcHl1c2RfbWV0YWRhdGEuanNvbgAAAAA=";
+      const parsedAccountData = token2022Parser.parseAccount(accountData);
+      expect(parsedAccountData?.name).toBe("mintAccount");
+      expect(parsedAccountData?.data.decimals).toBe(6);
+      expect(parsedAccountData?.data.extensions).toHaveLength(8);
+      expect(parsedAccountData?.data.extensions[0].enumType).toBe("mintCloseAuthority");
+      expect(parsedAccountData?.data.extensions[1].enumType).toBe("permanentDelegate");
+      expect(parsedAccountData?.data.extensions[2].enumType).toBe("transferFeeConfig");
+      expect(parsedAccountData?.data.extensions[3].enumType).toBe("confidentialTransferMint");
+      expect(parsedAccountData?.data.extensions[4].enumType).toBe("confidentialTransferFeeConfig");
+      expect(parsedAccountData?.data.extensions[5].enumType).toBe("transferHook");
+      expect(parsedAccountData?.data.extensions[6].enumType).toBe("metadataPointer");
+      expect(parsedAccountData?.data.extensions[7].enumType).toBe("tokenMetadata");
+      expect(parsedAccountData?.data.accountType.enumType).toBe("mint");
+    }
+  });
 });
 
 describe("parse a basic token-2022 token account with immutable extension", () => {
