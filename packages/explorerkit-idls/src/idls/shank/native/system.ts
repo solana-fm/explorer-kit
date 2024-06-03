@@ -3,7 +3,60 @@ import { Idl } from "@solanafm/kinobi-lite";
 export const SystemIDL: Idl = {
   version: "0.0.1",
   name: "system",
-  accounts: [],
+  accounts: [
+    {
+      name: "UninitializedNonceAccount",
+      type: {
+        kind: "struct",
+        fields: [],
+      },
+    },
+    {
+      name: "InitializedNonceAccount",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "state",
+            type: {
+              kind: "enum",
+              variants: [
+                {
+                  name: "Uninitialized",
+                },
+                {
+                  name: "Initialized",
+                },
+              ],
+              size: "u32",
+            },
+          },
+          {
+            name: "authority",
+            type: "publicKey",
+          },
+          {
+            name: "durableNonce",
+            type: {
+              array: ["u8", 32],
+            },
+          },
+          {
+            name: "feeCalculator",
+            type: {
+              kind: "struct",
+              fields: [
+                {
+                  name: "lamportsPerSignature",
+                  type: "u64",
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
   instructions: [
     {
       name: "CreateAccount",

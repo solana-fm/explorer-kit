@@ -50,6 +50,7 @@ export const createAccountParser = (idlItem: IdlItem, programHash: string, accou
         "Stake11111111111111111111111111111111111111",
         "BPFLoaderUpgradeab1e11111111111111111111111",
         "AddressLookupTab1e1111111111111111111111111",
+        "11111111111111111111111111111111",
       ];
 
       const localBorsh = [
