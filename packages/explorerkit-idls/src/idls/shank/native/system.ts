@@ -37,9 +37,7 @@ export const SystemIDL: Idl = {
           },
           {
             name: "durableNonce",
-            type: {
-              array: ["u8", 32],
-            },
+            type: "publicKey",
           },
           {
             name: "feeCalculator",
