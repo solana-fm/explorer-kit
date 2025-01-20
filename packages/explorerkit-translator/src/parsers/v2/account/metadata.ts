@@ -68,8 +68,12 @@ export const createShankMetaplexAccountParser: (
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing account data - ${accountData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
   };
 
@@ -98,8 +102,6 @@ const sanitySerializeMetadataAccount = (
     if (decodedAccountData && decodedAccountData[0]) {
       return decodedAccountData[0];
     }
-
-    return null;
   } catch (error) {
     if (error) {
       const typeLayouts = new KinobiTreeGenerator(idl).constructLayout(KinobiTreeGeneratorType.TYPES);
@@ -213,8 +215,15 @@ const sanitySerializeMetadataAccount = (
       }
     }
 
-    return null;
+    throw new Error(`Error parsing metadata account data - ${accountDataBuffer.toString("base64")}`, {
+      cause: {
+        decoderError: error,
+        programId: idl.metadata.address ?? "",
+      },
+    });
   }
+
+  return null;
 };
 
 function tryReadType(

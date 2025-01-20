@@ -69,8 +69,12 @@ export const createShankAccountParser: (
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing account data - ${accountData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
   };
 

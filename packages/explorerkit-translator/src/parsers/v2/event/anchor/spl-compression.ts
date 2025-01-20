@@ -45,8 +45,12 @@ export const createSPLCompEventParser: (_: IdlItem) => EventParserInterface = (_
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing event data - ${eventData}`, {
+        cause: {
+          decoderError: error,
+          programId: _.programId,
+        },
+      });
     }
   };
 

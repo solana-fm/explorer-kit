@@ -78,8 +78,12 @@ export const createShankIxMemo: (idlItem: IdlItem) => InstructionParserInterface
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing instruction data - ${instructionData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
   };
 

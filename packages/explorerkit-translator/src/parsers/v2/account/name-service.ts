@@ -20,7 +20,7 @@ export const createShankNameServiceAccount: (idlItem: IdlItem) => AccountParserI
       let accountSerializer: FMShankSerializer | undefined = undefined;
       if (dataBuffer.byteLength < ACCOUNT_MIN_SIZE) {
         // account data is not within the range of the account we are trying to deserialize
-        return null;
+        throw new Error(`Account data length is less than the minimum size required for this account`);
       }
 
       // TODO: PLEASE ABSTRACT THIS IN THE FUTURE!!!!
@@ -53,8 +53,12 @@ export const createShankNameServiceAccount: (idlItem: IdlItem) => AccountParserI
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing account data - ${accountData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
   };
 

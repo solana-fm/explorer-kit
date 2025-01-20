@@ -57,8 +57,12 @@ export const createShankInstructionParser: (idlItem: IdlItem) => InstructionPars
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing instruction data - ${instructionData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
   };
 

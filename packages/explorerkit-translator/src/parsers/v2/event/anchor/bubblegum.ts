@@ -78,8 +78,11 @@ export const createBubblegumEventParser: (_: IdlItem) => EventParserInterface = 
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing event data - ${eventData}`, {
+        cause: {
+          decoderError: error,
+        },
+      });
     }
   };
 

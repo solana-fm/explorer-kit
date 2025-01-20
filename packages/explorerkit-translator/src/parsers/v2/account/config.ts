@@ -50,8 +50,12 @@ export const createShankConfigAccount: (idlItem: IdlItem, accountHash: string) =
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing account data - ${accountData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
   };
 
