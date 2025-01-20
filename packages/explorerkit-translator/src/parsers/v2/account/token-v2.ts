@@ -156,8 +156,12 @@ export const createShankTokenV2Account: (idlItem: IdlItem) => AccountParserInter
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing account data - ${accountData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
   };
 
@@ -230,19 +234,28 @@ export const parseAccountWithoutExtensions = (
   mapTypes?: boolean
 ) => {
   if (accountSerializer) {
-    const decodedAccountData = accountSerializer.serializer?.deserialize(dataBuffer);
+    try {
+      const decodedAccountData = accountSerializer.serializer?.deserialize(dataBuffer);
 
-    if (decodedAccountData && decodedAccountData[0]) {
-      const filteredIdlAccount =
-        idl.accounts?.filter(
-          (account) => account.name.toLowerCase() === accountSerializer?.instructionName.toLowerCase()
-        ) ?? [];
+      if (decodedAccountData && decodedAccountData[0]) {
+        const filteredIdlAccount =
+          idl.accounts?.filter(
+            (account) => account.name.toLowerCase() === accountSerializer?.instructionName.toLowerCase()
+          ) ?? [];
 
-      if (mapTypes) {
-        decodedAccountData[0] = mapDataTypeToName(decodedAccountData[0], filteredIdlAccount[0]?.type.fields);
+        if (mapTypes) {
+          decodedAccountData[0] = mapDataTypeToName(decodedAccountData[0], filteredIdlAccount[0]?.type.fields);
+        }
+
+        return decodedAccountData[0];
       }
-
-      return decodedAccountData[0];
+    } catch (error) {
+      throw new Error(`Error parsing account data - ${dataBuffer.toString("base64")}`, {
+        cause: {
+          decoderError: error,
+          programId: idl.metadata.address ?? "",
+        },
+      });
     }
   }
 

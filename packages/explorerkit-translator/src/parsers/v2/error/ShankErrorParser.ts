@@ -36,7 +36,12 @@ export const createShankErrorParser: (idlItem: IdlItem) => ErrorParserInterface 
         };
       }
     } catch (parseErr) {
-      return null;
+      throw new Error(`Error parsing error data - ${unparsedErrorCode}`, {
+        cause: {
+          decoderError: parseErr,
+          programId: idlItem.programId,
+        },
+      });
     }
 
     return null;

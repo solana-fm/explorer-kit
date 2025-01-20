@@ -18,7 +18,7 @@ export type DataWithMappedType = {
  * @returns An object containing the mapped account keys and their corresponding names.
  */
 export const mapMultisigAccountKeysToName = (
-  accountKeys?: IdlAccountName[],
+  accountKeys?: string[],
   idlIxAccounts?: IdlInstructionAccount[],
   accountName?: string
 ): DataWithMappedType => {

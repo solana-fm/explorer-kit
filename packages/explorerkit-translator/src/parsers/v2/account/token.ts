@@ -25,7 +25,7 @@ export const createShankTokenAccount: (idlItem: IdlItem) => AccountParserInterfa
 
       if (dataBuffer.byteLength < MINT_MAX_SIZE && dataBuffer.byteLength > MULTISIG_MAX_SIZE) {
         // account data is not within the range of the account we are trying to deserialize
-        return null;
+        throw new Error(`Account data length is less than the minimum size required for this account`);
       }
 
       // checks if the account data length is within the length of the account we are trying to deserialize
@@ -87,8 +87,12 @@ export const createShankTokenAccount: (idlItem: IdlItem) => AccountParserInterfa
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing account data - ${accountData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
   };
 

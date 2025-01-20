@@ -88,8 +88,12 @@ export const createPhoenixEventParser: (idlItem: IdlItem) => EventParserInterfac
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing event data - ${eventData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
   };
 

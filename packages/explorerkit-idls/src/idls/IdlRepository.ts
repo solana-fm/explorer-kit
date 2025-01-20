@@ -158,7 +158,9 @@ export const getProgramIdl = async (
 
       return null;
     } catch (error) {
-      return null;
+      throw new Error(`Error fetching IDL for ${programHash}`, {
+        cause: error,
+      });
     }
   }
 

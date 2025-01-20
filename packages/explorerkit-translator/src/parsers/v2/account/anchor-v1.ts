@@ -11,27 +11,36 @@ export const createAnchorV1AccountParser: (idlItem: IdlItem) => AccountParserInt
   const accountLayouts = new BorshAccountsCoder(idl);
 
   const parseAccount = (accountData: string, maptypes?: boolean): ParserOutput => {
-    const bufferData = Buffer.from(accountData, "base64");
-    const accountDiscriminator = bufferData.subarray(0, 8);
-    const accountName = Array.from(idl.accounts ?? []).find((key) =>
-      accountLayouts.accountDiscriminator(key.name).equals(accountDiscriminator)
-    );
+    try {
+      const bufferData = Buffer.from(accountData, "base64");
+      const accountDiscriminator = bufferData.subarray(0, 8);
+      const accountName = Array.from(idl.accounts ?? []).find((key) =>
+        accountLayouts.accountDiscriminator(key.name).equals(accountDiscriminator)
+      );
+      
+      let decodedAccountData = accountLayouts.decodeAny(bufferData);
 
-    let decodedAccountData = accountLayouts.decodeAny(bufferData);
+      if (decodedAccountData) {
+        const filteredIdlType = idl.types?.filter((type) => type.name === accountName?.name) ?? [];
 
-    if (decodedAccountData) {
-      const filteredIdlType = idl.types?.filter((type) => type.name === accountName?.name) ?? [];
+        if (maptypes) {
+          if (filteredIdlType[0]?.type.kind === "struct" && filteredIdlType[0]?.type.fields)
+            decodedAccountData = mapNewAnchorDataTypeToName(decodedAccountData, filteredIdlType[0]?.type.fields);
+        }
 
-      if (maptypes) {
-        if (filteredIdlType[0]?.type.kind === "struct" && filteredIdlType[0]?.type.fields)
-          decodedAccountData = mapNewAnchorDataTypeToName(decodedAccountData, filteredIdlType[0]?.type.fields);
+        return {
+          name: accountName?.name as string,
+          data: convertBNToNumberInObject(decodedAccountData),
+          type: ParserType.ACCOUNT,
+        };
       }
-
-      return {
-        name: accountName?.name as string,
-        data: convertBNToNumberInObject(decodedAccountData),
-        type: ParserType.ACCOUNT,
-      };
+    } catch (error) {
+      throw new Error(`Error parsing account data - ${accountData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
 
     return null;

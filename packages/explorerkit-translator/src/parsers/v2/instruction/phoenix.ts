@@ -67,8 +67,12 @@ export const createShankIxPhoenix: (idlItem: IdlItem) => InstructionParserInterf
 
       return null;
     } catch (error) {
-      console.error(error);
-      return null;
+      throw new Error(`Error parsing instruction data - ${instructionData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
   };
 

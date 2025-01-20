@@ -16,20 +16,30 @@ export const createAnchorAccountParser: (idlItem: IdlItem) => AccountParserInter
     const accountName = Array.from(idl.accounts ?? []).find((key) =>
       BorshAccountsCoder.accountDiscriminator(key.name).equals(accountDiscriminator)
     );
-    let decodedAccountData = accountLayouts.decodeAny(bufferData);
 
-    if (decodedAccountData) {
-      const filteredIdlAccount = idl.accounts?.filter((account) => account.name === accountName?.name) ?? [];
+    try {
+      let decodedAccountData = accountLayouts.decodeAny(bufferData);
 
-      if (maptypes) {
-        decodedAccountData = mapDataTypeToName(decodedAccountData, filteredIdlAccount[0]?.type.fields);
+      if (decodedAccountData) {
+        const filteredIdlAccount = idl.accounts?.filter((account) => account.name === accountName?.name) ?? [];
+
+        if (maptypes) {
+          decodedAccountData = mapDataTypeToName(decodedAccountData, filteredIdlAccount[0]?.type.fields);
+        }
+
+        return {
+          name: accountName?.name as string,
+          data: convertBNToNumberInObject(decodedAccountData),
+          type: ParserType.ACCOUNT,
+        };
       }
-
-      return {
-        name: accountName?.name as string,
-        data: convertBNToNumberInObject(decodedAccountData),
-        type: ParserType.ACCOUNT,
-      };
+    } catch (error) {
+      throw new Error(`Error parsing account data - ${accountData}`, {
+        cause: {
+          decoderError: error,
+          programId: idlItem.programId,
+        },
+      });
     }
 
     return null;
