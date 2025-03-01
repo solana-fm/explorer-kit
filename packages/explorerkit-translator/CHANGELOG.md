@@ -1,5 +1,15 @@
 # @solanafm/explorer-kit
 
+## 1.2.0
+
+### Minor Changes
+
+- 36f9abf: feat: 1.2.0
+
+### Patch Changes
+
+- 0b67fd4: release: 1.1.4
+
 ## 1.1.3
 
 ### Patch Changes
