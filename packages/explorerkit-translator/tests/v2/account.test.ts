@@ -48,7 +48,7 @@ describe("parseAnchorAccount", () => {
         expect(decodedData).not.toBeNull();
         expect(decodedData?.type).toBe("account");
         expect(decodedData?.name).toBe("Pool");
-        expect(decodedData?.data["admin"].type).toBe("publicKey");
+        expect(decodedData?.data["aVault"].type).toBe("publicKey");
       }
     }
   });

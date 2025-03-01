@@ -4,9 +4,14 @@ import { addIdlToMap, getProgramIdl, IdlRepository } from "../src";
 import { getMultipleProgramIdls } from "../src/idls/IdlRepository";
 
 describe("getProgramIdl", () => {
-  it("should return null if the program does not have an idl", async () => {
-    const idl = await getProgramIdl("BRGovFm72qvoE8MwWP1ipgefSuUvp5y2Vs7PoRM74Sth");
-    expect(idl).toBeNull();
+  it("should return an error now if the program does not have an idl", async () => {
+    try {
+      await getProgramIdl("BRGovFm72qvoE8MwWP1ipgefSuUvp5y2Vs7PoRM74Sth");
+      // If we reach this line, the test should fail because no error was thrown
+      expect.fail("Expected an error but none was thrown");
+    } catch (error) {
+      expect(error.message).toBe("Error fetching IDL for BRGovFm72qvoE8MwWP1ipgefSuUvp5y2Vs7PoRM74Sth");
+    }
   });
 
   it("should return an idl from the cloud repository if the program has an idl", async () => {
@@ -87,8 +92,13 @@ describe("getProgramIdl", () => {
   });
 
   it("should returns undefined when program ID is not found in the IDL repository map", async () => {
-    const idl = await getProgramIdl("randomProgramID");
-    expect(idl).toBeNull();
+    try {
+      await getProgramIdl("randomProgramID");
+      // If we reach this line, the test should fail because no error was thrown
+      expect.fail("Expected an error but none was thrown");
+    } catch (error) {
+      expect(error.message).toBe("Error fetching IDL for randomProgramID");
+    }
   });
 
   it("should returns the latest IDL when no slot is specified", async () => {
