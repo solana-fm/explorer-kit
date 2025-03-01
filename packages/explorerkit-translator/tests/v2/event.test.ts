@@ -113,3 +113,55 @@ describe("createShankEventParser", () => {
     }
   });
 });
+
+describe("createNewAnchorParser", () => {
+  it("should construct an anchor 0.3.0 event parser for a given valid IDL", async () => {
+    const programId = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const eventParser = parser.createParser(ParserType.EVENT);
+
+      expect(eventParser).not.toBeNull();
+      expect(checkIfEventParser(eventParser)).toBe(true);
+    }
+  });
+
+  it("should construct an anchor 0.3.0 event parser for a given valid IDL and parses the event data", async () => {
+    const programId = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
+    const eventData =
+      "QMbN6CYIceKpKlqLTylZUoQlUKqT/VuVtazmqOuSDJOULkNpDCDscwabiFf+q4GE+2h/Y0YYwDXaxDncGus7VZig8AAAAAABG+xuAQAAAABuE+O/mSsnCUc4smt9N6Da8XiGrtyfTQYxWwx20dhGYdoM2iAAAAAA";
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const eventParser = parser.createParser(ParserType.EVENT);
+      if (eventParser && checkIfEventParser(eventParser)) {
+        const decodedData = eventParser.parseEvents(eventData);
+        expect(decodedData).not.toBeNull();
+        expect(decodedData?.type).toBe("event");
+        expect(decodedData?.name).toBe("SwapEvent");
+      }
+    }
+  });
+
+  it("should construct an anchor 0.3.0 event parser for a given valid IDL, parses the event data and properly map the data type with the given IDL", async () => {
+    const programId = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
+    const eventData =
+      "QMbN6CYIceKpKlqLTylZUoQlUKqT/VuVtazmqOuSDJOULkNpDCDscwabiFf+q4GE+2h/Y0YYwDXaxDncGus7VZig8AAAAAABG+xuAQAAAABuE+O/mSsnCUc4smt9N6Da8XiGrtyfTQYxWwx20dhGYdoM2iAAAAAA";
+    const idlItem = await getProgramIdl(programId);
+
+    if (idlItem) {
+      const parser = new SolanaFMParser(idlItem, programId);
+      const eventParser = parser.createParser(ParserType.EVENT);
+      if (eventParser && checkIfEventParser(eventParser)) {
+        const decodedData = eventParser.parseEvents(eventData, true);
+        expect(decodedData).not.toBeNull();
+        expect(decodedData?.type).toBe("event");
+        expect(decodedData?.name).toBe("SwapEvent");
+        expect(decodedData?.data["input_amount"].type).toBe("u64");
+      }
+    }
+  });
+});

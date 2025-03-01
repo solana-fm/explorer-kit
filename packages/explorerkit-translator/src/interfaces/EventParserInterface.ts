@@ -1,6 +1,7 @@
 import { BorshEventCoder, BorshInstructionCoder } from "@coral-xyz/anchor";
+import { BorshEventCoder as V1BorshEventCoder } from "@coral-xyz/anchor-new";
 
-import { createAnchorEventParser, createShankEventParser } from "../parsers/v2/event";
+import { createAnchorEventParser, createAnchorV1EventParser, createShankEventParser } from "../parsers/v2/event";
 import { createBubblegumEventParser } from "../parsers/v2/event/anchor/bubblegum";
 import { createSPLCompEventParser } from "../parsers/v2/event/anchor/spl-compression";
 import { createTCompEventParser } from "../parsers/v2/event/anchor/tcomp";
@@ -9,7 +10,11 @@ import { IdlItem } from "../types/IdlItem";
 import { FMShankSerializer } from "../types/KinobiTreeGenerator";
 import { ParserOutput } from "../types/Parsers";
 
-export type EventParsers = BorshInstructionCoder | BorshEventCoder | Map<number | string, FMShankSerializer>;
+export type EventParsers =
+  | BorshInstructionCoder
+  | BorshEventCoder
+  | V1BorshEventCoder
+  | Map<number | string, FMShankSerializer>;
 
 export interface EventParserInterface {
   eventsLayout: EventParsers;
@@ -32,6 +37,9 @@ export const createEventParser = (idlItem: IdlItem, programHash: string) => {
         default:
           return createAnchorEventParser(idlItem);
       }
+
+    case "anchorV1":
+      return createAnchorV1EventParser(idlItem);
 
     case "kinobi":
       switch (programHash) {
